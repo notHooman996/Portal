@@ -1,3 +1,3 @@
-﻿
-using var game = new Portal.Game1();
+﻿using Portal; 
+using var game = GameWorld.Instance;
 game.Run();
