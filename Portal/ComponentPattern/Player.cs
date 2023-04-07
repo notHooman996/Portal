@@ -43,23 +43,10 @@ namespace Portal.ComponentPattern
         {
             //handles input
             InputHandler.Instance.Execute(this);
-
-            // keep moving until goal is reached 
-            int offset = 5;
-
-            if (GameObject.Transform.Position.X <= goalPosition.X - offset || GameObject.Transform.Position.Y <= goalPosition.Y - offset ||
-               GameObject.Transform.Position.X >= goalPosition.X + offset || GameObject.Transform.Position.Y >= goalPosition.Y + offset)
-            {
-                Move(goalPosition);
-            }
         }
 
-        public void Move(Vector2 endPoint)
+        public void Move(Vector2 velocity)
         {
-            goalPosition = endPoint;
-
-            Vector2 velocity = new Vector2(endPoint.X - GameObject.Transform.Position.X, endPoint.Y - GameObject.Transform.Position.Y);
-
             if (velocity != Vector2.Zero)
             {
                 velocity.Normalize();
@@ -67,6 +54,12 @@ namespace Portal.ComponentPattern
 
             velocity *= speed;
             GameObject.Transform.Translate(velocity * GameWorld.DeltaTime);
+
+            if(velocity.Y < 10)
+            {
+                Vector2 fall = new Vector2(velocity.X, velocity.Y + 0.4f); 
+                GameObject.Transform.Translate(fall * GameWorld.DeltaTime);
+            }
         }
 
         public void Notify(GameEvent gameEvent)

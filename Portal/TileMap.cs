@@ -79,6 +79,8 @@ namespace Portal
             switch (tileTypes[position])
             {
                 case 0:
+                    tile = (Tile)gameObject.AddComponent(new Tile(position, tileSize, tileSize, 1));
+                    tile.Walkable = false;
                     break; 
                 case 1:
                     // obstacle - not walkable, collision
