@@ -3,6 +3,7 @@ using Portal.CommandPattern;
 using Portal.ObserverPattern;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,8 +15,6 @@ namespace Portal.ComponentPattern
         #region fields
         private SpriteRenderer spriteRenderer;
         private float speed;
-
-        private Vector2 goalPosition;
         #endregion
 
         #region methods
@@ -32,7 +31,6 @@ namespace Portal.ComponentPattern
             spriteRenderer.Scale = 1f;
             // set initial position to middle of the map 
             GameObject.Transform.Position = new Vector2(GameWorld.Instance.Map.Width / 2, GameWorld.Instance.Map.Height / 2);
-            goalPosition = GameObject.Transform.Position;
         }
 
         /// <summary>
@@ -43,6 +41,10 @@ namespace Portal.ComponentPattern
         {
             //handles input
             InputHandler.Instance.Execute(this);
+
+            // make player fall 
+            Vector2 fall = new Vector2(0, 0.4f) * speed;
+            GameObject.Transform.Translate(fall * GameWorld.DeltaTime);
         }
 
         public void Move(Vector2 velocity)
@@ -54,12 +56,6 @@ namespace Portal.ComponentPattern
 
             velocity *= speed;
             GameObject.Transform.Translate(velocity * GameWorld.DeltaTime);
-
-            if(velocity.Y < 10)
-            {
-                Vector2 fall = new Vector2(velocity.X, velocity.Y + 0.4f); 
-                GameObject.Transform.Translate(fall * GameWorld.DeltaTime);
-            }
         }
 
         public void Notify(GameEvent gameEvent)
