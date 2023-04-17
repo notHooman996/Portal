@@ -31,6 +31,8 @@ namespace Portal.ComponentPattern
             spriteRenderer.Scale = 1f;
             // set initial position to middle of the map 
             GameObject.Transform.Position = new Vector2(GameWorld.Instance.Map.Width / 2, GameWorld.Instance.Map.Height / 2);
+
+            GameObject.Tag = "Player"; 
         }
 
         /// <summary>
@@ -43,7 +45,7 @@ namespace Portal.ComponentPattern
             InputHandler.Instance.Execute(this);
 
             // make player fall 
-            Vector2 fall = new Vector2(0, 0.4f) * speed;
+            Vector2 fall = new Vector2(0, 0.9f) * speed;
             GameObject.Transform.Translate(fall * GameWorld.DeltaTime);
         }
 
@@ -60,7 +62,15 @@ namespace Portal.ComponentPattern
 
         public void Notify(GameEvent gameEvent)
         {
+            if(gameEvent is CollisionEvent)
+            {
+                GameObject other = (gameEvent as CollisionEvent).Other; 
 
+                if(other.Tag == "Tile")
+                {
+                    Debug.WriteLine("test"); 
+                }
+            }
         }
         #endregion
     }

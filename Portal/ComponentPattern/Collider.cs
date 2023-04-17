@@ -51,11 +51,11 @@ namespace Portal.ComponentPattern
         public override void Start()
         {
             //returns a lazy list from createrectangles
-            //rectangles = new Lazy<List<RectangleData>>(() => CreateRectangles());
+            rectangles = new Lazy<List<RectangleData>>(() => CreateRectangles());
             spriteRenderer = (SpriteRenderer)GameObject.GetComponent<SpriteRenderer>();
-            //texture = GameWorld.Instance.Content.Load<Texture2D>("Pixel");
+            texture = GameWorld.Instance.Content.Load<Texture2D>("Pixel");
 
-            //CreateRectangles();
+            CreateRectangles();
         }
 
         /// <summary>
