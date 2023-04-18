@@ -76,7 +76,7 @@ namespace Portal.ComponentPattern
             //    DrawRectangle(rd.Rectangle, spriteBatch);
             //}
 
-            //DrawRectangle(CollisionBox, spriteBatch);
+            DrawRectangle(CollisionBox, spriteBatch);
         }
 
         public void DrawRectangle(Rectangle collisionBox, SpriteBatch spriteBatch)

@@ -89,6 +89,12 @@ namespace Portal
             foreach (GameObject gameObject in gameObjects)
             {
                 gameObject.Awake();
+
+                Collider collider = (Collider)gameObject.GetComponent<Collider>();
+                if (collider != null)
+                {
+                    Colliders.Add(collider);
+                }
             }
 
             userInterface.Initialize();

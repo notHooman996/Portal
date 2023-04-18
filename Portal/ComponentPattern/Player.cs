@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Portal.CommandPattern;
 using Portal.ObserverPattern;
 using System;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ButtonState = Portal.ObserverPattern.ButtonState;
 
 namespace Portal.ComponentPattern
 {
@@ -15,6 +17,9 @@ namespace Portal.ComponentPattern
         #region fields
         private SpriteRenderer spriteRenderer;
         private float speed;
+        private bool isFalling = true;
+
+        private Dictionary<Keys, ButtonState> movementKeys = new Dictionary<Keys, ButtonState>();
         #endregion
 
         #region methods
@@ -31,8 +36,11 @@ namespace Portal.ComponentPattern
             spriteRenderer.Scale = 1f;
             // set initial position to middle of the map 
             GameObject.Transform.Position = new Vector2(GameWorld.Instance.Map.Width / 2, GameWorld.Instance.Map.Height / 2);
+            GameObject.Tag = "Player";
 
-            GameObject.Tag = "Player"; 
+            movementKeys.Add(Keys.A, ButtonState.UP);
+            movementKeys.Add(Keys.D, ButtonState.UP);
+            movementKeys.Add(Keys.W, ButtonState.UP); 
         }
 
         /// <summary>
@@ -44,9 +52,28 @@ namespace Portal.ComponentPattern
             //handles input
             InputHandler.Instance.Execute(this);
 
-            // make player fall 
-            Vector2 fall = new Vector2(0, 0.9f) * speed;
-            GameObject.Transform.Translate(fall * GameWorld.DeltaTime);
+            if (isFalling)
+            {
+                // make player fall 
+                Vector2 fall = new Vector2(0, 0.7f) * speed;
+                GameObject.Transform.Translate(fall * GameWorld.DeltaTime);
+            }
+
+            // make player turn forward 
+            //if (movementKeys[Keys.A] == ButtonState.UP && movementKeys[Keys.D] == ButtonState.UP)
+            //{
+            //    animator.PlayAnimation("Forward");
+            //}
+        }
+
+        public void Jump()
+        {
+            if (!isFalling)
+            {
+                Debug.WriteLine("jump");
+                Vector2 jump = new Vector2(0, -10) * speed;
+                GameObject.Transform.Translate(jump * GameWorld.DeltaTime);
+            }
         }
 
         public void Move(Vector2 velocity)
@@ -64,13 +91,26 @@ namespace Portal.ComponentPattern
         {
             if(gameEvent is CollisionEvent)
             {
-                GameObject other = (gameEvent as CollisionEvent).Other; 
+                GameObject other = (gameEvent as CollisionEvent).Other;
 
-                if(other.Tag == "Tile")
+                if (other.Tag == "Tile")
                 {
-                    Debug.WriteLine("test"); 
+                    isFalling = true;
                 }
+                if (other.Tag == "CollisionTile")
+                {
+                    //Debug.WriteLine("test");
+                    isFalling = false;
+                }
+                
             }
+            else if (gameEvent is ButtonEvent)
+            {
+                ButtonEvent buttonEvent = (gameEvent as ButtonEvent);
+
+                movementKeys[buttonEvent.Key] = buttonEvent.State;
+            }
+
         }
         #endregion
     }

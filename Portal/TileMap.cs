@@ -69,28 +69,30 @@ namespace Portal
         public GameObject AddTile(int x, int y)
         {
             GameObject gameObject = new GameObject();
+            gameObject.AddComponent(new SpriteRenderer());
+            gameObject.AddComponent(new Collider());
 
             Point position = new Point(x, y);
 
             CollisionTile tile;
-            Collider collider; 
+            //Collider collider; 
 
             switch (tileTypes[position])
             {
                 case 0:
-                    gameObject.AddComponent(new Tile());
+                    gameObject.AddComponent(new Tile(position, tileSize, tileSize, 1));
                     break; 
                 case 1:
                     tile = (CollisionTile)gameObject.AddComponent(new CollisionTile(position, tileSize, tileSize, 1));
-                    gameObject.AddComponent(new SpriteRenderer());
-                    collider = (Collider)gameObject.AddComponent(new Collider());
-                    collider.CollisionEvent.Attach(tile);
+                    //gameObject.AddComponent(new SpriteRenderer());
+                    //collider = (Collider)gameObject.AddComponent(new Collider());
+                    //collider.CollisionEvent.Attach(tile);
                     break;
                 case 2:
                     tile = (CollisionTile)gameObject.AddComponent(new CollisionTile(position, tileSize, tileSize, 2));
-                    gameObject.AddComponent(new SpriteRenderer());
-                    collider = (Collider)gameObject.AddComponent(new Collider());
-                    collider.CollisionEvent.Attach(tile);
+                    //gameObject.AddComponent(new SpriteRenderer());
+                    //collider = (Collider)gameObject.AddComponent(new Collider());
+                    //collider.CollisionEvent.Attach(tile);
                     break;
             }
 

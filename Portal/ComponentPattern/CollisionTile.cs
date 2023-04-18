@@ -11,7 +11,7 @@ namespace Portal.ComponentPattern
 {
     public class CollisionTile : Tile, IGameListener
     {
-        public CollisionTile(Point position, int width, int height, int textureID) 
+        public CollisionTile(Point position, int width, int height, int textureID) : base(position, width, height, textureID)
         {
             Position = position;
             Width = width;
@@ -27,20 +27,20 @@ namespace Portal.ComponentPattern
             spriteRenderer.Scale = 2f;
             GameObject.Transform.Position = new Vector2(Position.X * Width + (Width / 2), Position.Y * Height + (Height / 2));
 
-            GameObject.Tag = "Tile"; 
+            GameObject.Tag = "CollisionTile"; 
         }
 
         public void Notify(GameEvent gameEvent)
         {
-            if (gameEvent is CollisionEvent)
-            {
-                GameObject other = (gameEvent as CollisionEvent).Other;
+            //if (gameEvent is CollisionEvent)
+            //{
+            //    GameObject other = (gameEvent as CollisionEvent).Other;
 
-                if (other.Tag == "Player")
-                {
-                    Debug.WriteLine("test");
-                }
-            }
+            //    if (other.Tag == "Player")
+            //    {
+            //        Debug.WriteLine("test");
+            //    }
+            //}
         }
     }
 }
