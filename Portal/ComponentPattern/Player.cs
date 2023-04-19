@@ -34,6 +34,8 @@ namespace Portal.ComponentPattern
             spriteRenderer.SetSprite("Player\\player");
             spriteRenderer.LayerDepth = 0.5f;
             spriteRenderer.Scale = 1f;
+            spriteRenderer.Color = new Color(255, 255, 255);
+
             // set initial position to middle of the map 
             GameObject.Transform.Position = new Vector2(GameWorld.Instance.Map.Width / 2, GameWorld.Instance.Map.Height / 2);
             GameObject.Tag = "Player";
@@ -71,7 +73,7 @@ namespace Portal.ComponentPattern
             if (!isFalling)
             {
                 Debug.WriteLine("jump");
-                Vector2 jump = new Vector2(0, -10) * speed;
+                Vector2 jump = new Vector2(0, -15) * speed;
                 GameObject.Transform.Translate(jump * GameWorld.DeltaTime);
             }
         }
