@@ -31,6 +31,10 @@ namespace Portal.BuilderPattern
             gameObject.AddComponent(new SpriteRenderer());
             Collider collider = (Collider)gameObject.AddComponent(new Collider());
             collider.CollisionEvent.Attach(player);
+            collider.TopCollisionEvent.Attach(player); 
+            collider.BottomCollisionEvent.Attach(player); 
+            collider.RightCollisionEvent.Attach(player); 
+            collider.LeftCollisionEvent.Attach(player); 
         }
 
         /// <summary>

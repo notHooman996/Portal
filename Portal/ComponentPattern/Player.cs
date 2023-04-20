@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using Portal.CommandPattern;
 using Portal.ObserverPattern;
+using Portal.ObserverPattern.TileCollisionEvents;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -106,7 +107,51 @@ namespace Portal.ComponentPattern
                 }
                 
             }
-            else if (gameEvent is ButtonEvent)
+
+            if(gameEvent is TopCollisionEvent)
+            {
+                GameObject other = (gameEvent as TopCollisionEvent).Other;
+
+                if (other.Tag == "Tile")
+                {
+                    isFalling = true;
+                }
+                if (other.Tag == "CollisionTile")
+                {
+                    Debug.WriteLine("top");
+                    isFalling = false;
+                }
+            }
+            if(gameEvent is BottomCollisionEvent)
+            {
+                GameObject other = (gameEvent as BottomCollisionEvent).Other;
+
+                if (other.Tag == "CollisionTile")
+                {
+                    Debug.WriteLine("bottom");
+                }
+            }
+            if (gameEvent is RightCollisionEvent)
+            {
+                GameObject other = (gameEvent as RightCollisionEvent).Other;
+
+                if (other.Tag == "CollisionTile")
+                {
+                    Debug.WriteLine("right");
+                }
+            }
+            if (gameEvent is LeftCollisionEvent)
+            {
+                GameObject other = (gameEvent as LeftCollisionEvent).Other;
+
+                if (other.Tag == "CollisionTile")
+                {
+                    Debug.WriteLine("left");
+                }
+            }
+
+
+            if (gameEvent is ButtonEvent)
             {
                 ButtonEvent buttonEvent = (gameEvent as ButtonEvent);
 
