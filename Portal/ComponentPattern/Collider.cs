@@ -82,7 +82,7 @@ namespace Portal.ComponentPattern
             //    DrawRectangle(rd.Rectangle, spriteBatch);
             //}
 
-            DrawRectangle(CollisionBox, spriteBatch);
+            //DrawRectangle(CollisionBox, spriteBatch);
         }
 
         public void DrawRectangle(Rectangle collisionBox, SpriteBatch spriteBatch)
@@ -109,6 +109,8 @@ namespace Portal.ComponentPattern
             {
                 if (other != this && other.CollisionBox.Intersects(CollisionBox))
                 {
+                    CollisionEvent.Notify(other.GameObject);
+
                     if (rectangleHelper.TouchTopOf(CollisionBox, other.CollisionBox))
                     {
                         TopCollisionEvent.Notify(other.GameObject); 
