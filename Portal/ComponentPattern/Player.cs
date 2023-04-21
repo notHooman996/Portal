@@ -20,6 +20,11 @@ namespace Portal.ComponentPattern
         private float speed;
         private bool isFalling = true;
 
+        private float jumpCooldown = 0;
+        private bool hasJumped = false; 
+
+        private Vector2 gravity;
+
         private Dictionary<Keys, ButtonState> movementKeys = new Dictionary<Keys, ButtonState>();
         #endregion
 
@@ -30,6 +35,7 @@ namespace Portal.ComponentPattern
         public override void Start()
         {
             speed = 250;
+            gravity = new Vector2(0, 0.9f) * speed;
 
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
             spriteRenderer.SetSprite("Player\\player");
@@ -58,8 +64,28 @@ namespace Portal.ComponentPattern
             if (isFalling)
             {
                 // make player fall 
-                Vector2 fall = new Vector2(0, 0.7f) * speed;
-                GameObject.Transform.Translate(fall * GameWorld.DeltaTime);
+                GameObject.Transform.Translate(gravity * GameWorld.DeltaTime);
+            }
+
+            // update jump cooldown 
+            jumpCooldown += GameWorld.DeltaTime;
+
+            if (hasJumped)
+            {
+                if(jumpCooldown < 0.1f)
+                {
+                    Vector2 velocity = new Vector2(0, -5f) * speed;
+                    GameObject.Transform.Translate(velocity * GameWorld.DeltaTime);
+                }
+                else if (jumpCooldown < 0.3f)
+                {
+                    Vector2 velocity = new Vector2(0, -1.5f) * speed;
+                    GameObject.Transform.Translate(velocity * GameWorld.DeltaTime);
+                }
+                else
+                {
+                    hasJumped = false;
+                }
             }
 
             // make player turn forward 
@@ -71,11 +97,15 @@ namespace Portal.ComponentPattern
 
         public void Jump()
         {
-            if (!isFalling)
+            if (!isFalling && jumpCooldown > 0.5f)
             {
                 Debug.WriteLine("jump");
-                Vector2 jump = new Vector2(0, -15) * speed;
-                GameObject.Transform.Translate(jump * GameWorld.DeltaTime);
+                //Vector2 jump = new Vector2(0, -25) * speed;
+                //GameObject.Transform.Translate(jump * GameWorld.DeltaTime);
+
+                hasJumped = true; 
+
+                jumpCooldown = 0; 
             }
         }
 
@@ -98,37 +128,54 @@ namespace Portal.ComponentPattern
 
                 if (other.Tag == "Tile")
                 {
+                    //Debug.WriteLine("tile");
                     isFalling = true;
                 }
                 if (other.Tag == "CollisionTile")
                 {
-                    //Debug.WriteLine("test");
-                    isFalling = false;
+                    //Debug.WriteLine("tile");
+                    isFalling = true;
                 }
-                
             }
+
 
             if(gameEvent is TopCollisionEvent)
             {
                 GameObject other = (gameEvent as TopCollisionEvent).Other;
 
-                if (other.Tag == "Tile")
-                {
-                    isFalling = true;
-                }
+                //if (other.Tag == "Tile")
+                //{
+                //    //Debug.WriteLine("tile");
+                //    isFalling = true;
+                //}
                 if (other.Tag == "CollisionTile")
                 {
-                    Debug.WriteLine("top");
+                    //Debug.WriteLine("top");
                     isFalling = false;
+
+                    GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X, 
+                                                                other.Transform.Position.Y - (spriteRenderer.Sprite.Height + spriteRenderer.Origin.Y)); 
                 }
             }
-            if(gameEvent is BottomCollisionEvent)
+            if (gameEvent is BottomCollisionEvent)
             {
                 GameObject other = (gameEvent as BottomCollisionEvent).Other;
 
                 if (other.Tag == "CollisionTile")
                 {
                     Debug.WriteLine("bottom");
+
+                    //GameObject.Transform.Translate(new Vector2(0, 1) * speed * GameWorld.DeltaTime);
+
+                    //GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X, 
+                    //                                            other.Transform.Position.Y + (spriteRenderer.Sprite.Height - spriteRenderer.Origin.Y));
+
+                    jumpCooldown = 1; 
+
+                    SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
+
+                    GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
+                                                                other.Transform.Position.Y + (otherSpriteRenderer.Sprite.Height + spriteRenderer.Sprite.Height / 2));
                 }
             }
             if (gameEvent is RightCollisionEvent)
@@ -138,6 +185,14 @@ namespace Portal.ComponentPattern
                 if (other.Tag == "CollisionTile")
                 {
                     Debug.WriteLine("right");
+
+                    //Vector2 right = new Vector2(+speed, 0);
+                    //GameObject.Transform.Translate(right * GameWorld.DeltaTime);
+
+                    SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
+
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X + otherSpriteRenderer.Sprite.Width + spriteRenderer.Origin.X,
+                                                                GameObject.Transform.Position.Y);
                 }
             }
             if (gameEvent is LeftCollisionEvent)
@@ -147,6 +202,12 @@ namespace Portal.ComponentPattern
                 if (other.Tag == "CollisionTile")
                 {
                     Debug.WriteLine("left");
+
+                    //Vector2 left = new Vector2(-speed, 0);
+                    //GameObject.Transform.Translate(left * GameWorld.DeltaTime);
+
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X - (spriteRenderer.Sprite.Width + spriteRenderer.Origin.X),
+                                                                GameObject.Transform.Position.Y);
                 }
             }
 
