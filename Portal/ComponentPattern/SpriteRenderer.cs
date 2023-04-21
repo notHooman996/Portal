@@ -36,6 +36,8 @@ namespace Portal.ComponentPattern
         /// Flip vertically: 2 
         /// </summary>
         public SpriteEffects Flip { get; set; }
+
+        public Color Color { get; set; }
         #endregion
 
         #region methods
@@ -62,7 +64,7 @@ namespace Portal.ComponentPattern
         /// <param name="spriteBatch">passed in from gameworld so we can draw through it</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Sprite, GameObject.Transform.Position, null, Color.White, GameObject.Transform.Rotation, Origin, Scale, Flip, LayerDepth);
+            spriteBatch.Draw(Sprite, GameObject.Transform.Position, null, Color, GameObject.Transform.Rotation, Origin, Scale, Flip, LayerDepth);
         }
         #endregion
     }

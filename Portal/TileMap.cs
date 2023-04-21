@@ -64,31 +64,35 @@ namespace Portal
                     tileTypes.Add(new Point(j, i), typeID);
                 }
             }
-
         }
 
         public GameObject AddTile(int x, int y)
         {
             GameObject gameObject = new GameObject();
             gameObject.AddComponent(new SpriteRenderer());
+            gameObject.AddComponent(new Collider());
 
             Point position = new Point(x, y);
 
-            Tile tile;
+            CollisionTile tile;
+            //Collider collider; 
 
             switch (tileTypes[position])
             {
                 case 0:
+                    gameObject.AddComponent(new Tile(position, tileSize, tileSize, 1));
                     break; 
                 case 1:
-                    // obstacle - not walkable, collision
-                    tile = (Tile)gameObject.AddComponent(new Tile(position, tileSize, tileSize, 1));
-                    tile.Walkable = false;
+                    tile = (CollisionTile)gameObject.AddComponent(new CollisionTile(position, tileSize, tileSize, 1));
+                    //gameObject.AddComponent(new SpriteRenderer());
+                    //collider = (Collider)gameObject.AddComponent(new Collider());
+                    //collider.CollisionEvent.Attach(tile);
                     break;
                 case 2:
-                    // grass - walkable, no collision 
-                    tile = (Tile)gameObject.AddComponent(new Tile(position, tileSize, tileSize, 2));
-                    tile.Walkable = true;
+                    tile = (CollisionTile)gameObject.AddComponent(new CollisionTile(position, tileSize, tileSize, 2));
+                    //gameObject.AddComponent(new SpriteRenderer());
+                    //collider = (Collider)gameObject.AddComponent(new Collider());
+                    //collider.CollisionEvent.Attach(tile);
                     break;
             }
 

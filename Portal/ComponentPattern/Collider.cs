@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Portal.ObserverPattern;
+using Portal.ObserverPattern.TileCollisionEvents;
+using System.Diagnostics;
 
 namespace Portal.ComponentPattern
 {
@@ -25,6 +27,10 @@ namespace Portal.ComponentPattern
         /// used to get or set the collsion event
         /// </summary>
         public CollisionEvent CollisionEvent { get; private set; } = new CollisionEvent();
+        public TopCollisionEvent TopCollisionEvent { get; private set; } = new TopCollisionEvent(); 
+        public BottomCollisionEvent BottomCollisionEvent { get; private set; } = new BottomCollisionEvent(); 
+        public RightCollisionEvent RightCollisionEvent { get; private set; } = new RightCollisionEvent(); 
+        public LeftCollisionEvent LeftCollisionEvent { get; private set; } = new LeftCollisionEvent(); 
 
         /// <summary>
         /// used to return a rectangle based on the objects position and its sprite
@@ -53,7 +59,7 @@ namespace Portal.ComponentPattern
             //returns a lazy list from createrectangles
             //rectangles = new Lazy<List<RectangleData>>(() => CreateRectangles());
             spriteRenderer = (SpriteRenderer)GameObject.GetComponent<SpriteRenderer>();
-            //texture = GameWorld.Instance.Content.Load<Texture2D>("Pixel");
+            texture = GameWorld.Instance.Content.Load<Texture2D>("Pixel");
 
             //CreateRectangles();
         }
@@ -97,25 +103,50 @@ namespace Portal.ComponentPattern
         /// </summary>
         private void CheckCollision()
         {
+            RectangleHelper rectangleHelper = new RectangleHelper(); 
+
             foreach (Collider other in GameWorld.Instance.Colliders)
             {
                 if (other != this && other.CollisionBox.Intersects(CollisionBox))
                 {
                     CollisionEvent.Notify(other.GameObject);
-                    //return;
 
-                    //foreach (RectangleData myRectangleData in rectangles.Value)
-                    //{
-                    //    foreach (RectangleData otherRectangleData in other.rectangles.Value)
-                    //    {
-                    //        if (myRectangleData.Rectangle.Intersects(otherRectangleData.Rectangle))
-                    //        {
-                    //            CollisionEvent.Notify(other.GameObject);
-                    //            return;
-                    //        }
-                    //    }
-                    //}
+                    if (rectangleHelper.TouchTopOf(CollisionBox, other.CollisionBox))
+                    {
+                        TopCollisionEvent.Notify(other.GameObject); 
+                    }
+                    if (rectangleHelper.TouchBottomOf(CollisionBox, other.CollisionBox))
+                    {
+                        BottomCollisionEvent.Notify(other.GameObject);
+                    }
+                    if (rectangleHelper.TouchRightOf(CollisionBox, other.CollisionBox))
+                    {
+                        RightCollisionEvent.Notify(other.GameObject);
+                    }
+                    if (rectangleHelper.TouchLeftOf(CollisionBox, other.CollisionBox))
+                    {
+                        LeftCollisionEvent.Notify(other.GameObject);
+                    }
                 }
+                
+
+                //if (other != this && other.CollisionBox.Intersects(CollisionBox))
+                //{
+                //    CollisionEvent.Notify(other.GameObject);
+                //    //return;
+
+                //    //foreach (RectangleData myRectangleData in rectangles.Value)
+                //    //{
+                //    //    foreach (RectangleData otherRectangleData in other.rectangles.Value)
+                //    //    {
+                //    //        if (myRectangleData.Rectangle.Intersects(otherRectangleData.Rectangle))
+                //    //        {
+                //    //            CollisionEvent.Notify(other.GameObject);
+                //    //            return;
+                //    //        }
+                //    //    }
+                //    //}
+                //}
             }
         }
 
@@ -123,61 +154,61 @@ namespace Portal.ComponentPattern
         /// creates pixel collision by making pixels at the border of a sprite where the alpha lvl is not transparent
         /// </summary>
         /// <returns>a list of pixels</returns>
-        private List<RectangleData> CreateRectangles()
-        {
-            loaded = true;
+        //private List<RectangleData> CreateRectangles()
+        //{
+        //    loaded = true;
 
-            List<RectangleData> pixels = new List<RectangleData>();
+        //    List<RectangleData> pixels = new List<RectangleData>();
 
-            List<Color[]> lines = new List<Color[]>();
+        //    List<Color[]> lines = new List<Color[]>();
 
-            for (int y = 0; y < spriteRenderer.Sprite.Height; y++)
-            {
-                Color[] colors = new Color[spriteRenderer.Sprite.Width];
-                spriteRenderer.Sprite.GetData(0, new Rectangle(0, y, spriteRenderer.Sprite.Width, 1), colors, 0, spriteRenderer.Sprite.Width);
-                lines.Add(colors);
-            }
+        //    for (int y = 0; y < spriteRenderer.Sprite.Height; y++)
+        //    {
+        //        Color[] colors = new Color[spriteRenderer.Sprite.Width];
+        //        spriteRenderer.Sprite.GetData(0, new Rectangle(0, y, spriteRenderer.Sprite.Width, 1), colors, 0, spriteRenderer.Sprite.Width);
+        //        lines.Add(colors);
+        //    }
 
-            for (int y = 0; y < lines.Count; y++)
-            {
-                //lines in the list [y]
-                for (int x = 0; x < lines[y].Length; x++)
-                {
-                    if (lines[y][x].A != 0)
-                    {
-                        if ((x == 0)    // check leftside corner
-                            || (x == lines[y].Length) //right side corner
-                            || (x > 0 && lines[y][x - 1].A == 0) //looks at the pixel to the left
+        //    for (int y = 0; y < lines.Count; y++)
+        //    {
+        //        //lines in the list [y]
+        //        for (int x = 0; x < lines[y].Length; x++)
+        //        {
+        //            if (lines[y][x].A != 0)
+        //            {
+        //                if ((x == 0)    // check leftside corner
+        //                    || (x == lines[y].Length) //right side corner
+        //                    || (x > 0 && lines[y][x - 1].A == 0) //looks at the pixel to the left
 
-                            || (x < lines[y].Length - 1 && lines[y][x + 1].A == 0)    //looks at the pixel to the right
-                            || (y == 0) // checsk rightside corner
-                            || (y > 0 && lines[y - 1][x].A == 0) //looks at the pixel above               
-                            || (y < lines.Count - 1 && lines[y + 1][x].A == 0)) //looks at the pixel below
-                        {
-                            RectangleData rd = new RectangleData(x, y);
-                            pixels.Add(rd);
-                        }
+        //                    || (x < lines[y].Length - 1 && lines[y][x + 1].A == 0)    //looks at the pixel to the right
+        //                    || (y == 0) // checsk rightside corner
+        //                    || (y > 0 && lines[y - 1][x].A == 0) //looks at the pixel above               
+        //                    || (y < lines.Count - 1 && lines[y + 1][x].A == 0)) //looks at the pixel below
+        //                {
+        //                    RectangleData rd = new RectangleData(x, y);
+        //                    pixels.Add(rd);
+        //                }
 
-                    }
-                }
-            }
-            return pixels;
-        }
+        //            }
+        //        }
+        //    }
+        //    return pixels;
+        //}
 
         /// <summary>
         /// updates the position of the pixels
         /// </summary>
-        private void UpdatePixelCollider()
-        {
-            if (loaded)
-            {
-                for (int i = 0; i < rectangles.Value.Count; i++)
-                {
-                    rectangles.Value[i].UpdatePosition(GameObject, spriteRenderer.Sprite.Width, spriteRenderer.Sprite.Height);
-                }
-            }
+        //private void UpdatePixelCollider()
+        //{
+        //    if (loaded)
+        //    {
+        //        for (int i = 0; i < rectangles.Value.Count; i++)
+        //        {
+        //            rectangles.Value[i].UpdatePosition(GameObject, spriteRenderer.Sprite.Width, spriteRenderer.Sprite.Height);
+        //        }
+        //    }
 
-        }
+        //}
         #endregion
     }
 

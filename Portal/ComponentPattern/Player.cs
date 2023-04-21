@@ -1,11 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Portal.CommandPattern;
 using Portal.ObserverPattern;
+using Portal.ObserverPattern.TileCollisionEvents;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ButtonState = Portal.ObserverPattern.ButtonState;
 
 namespace Portal.ComponentPattern
 {
@@ -14,8 +18,14 @@ namespace Portal.ComponentPattern
         #region fields
         private SpriteRenderer spriteRenderer;
         private float speed;
+        private bool isFalling = true;
 
-        private Vector2 goalPosition;
+        private float jumpCooldown = 0;
+        private bool hasJumped = false; 
+
+        private Vector2 gravity;
+
+        private Dictionary<Keys, ButtonState> movementKeys = new Dictionary<Keys, ButtonState>();
         #endregion
 
         #region methods
@@ -25,14 +35,21 @@ namespace Portal.ComponentPattern
         public override void Start()
         {
             speed = 250;
+            gravity = new Vector2(0, 0.9f) * speed;
 
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
             spriteRenderer.SetSprite("Player\\player");
             spriteRenderer.LayerDepth = 0.5f;
             spriteRenderer.Scale = 1f;
+            spriteRenderer.Color = new Color(255, 255, 255);
+
             // set initial position to middle of the map 
             GameObject.Transform.Position = new Vector2(GameWorld.Instance.Map.Width / 2, GameWorld.Instance.Map.Height / 2);
-            goalPosition = GameObject.Transform.Position;
+            GameObject.Tag = "Player";
+
+            movementKeys.Add(Keys.A, ButtonState.UP);
+            movementKeys.Add(Keys.D, ButtonState.UP);
+            movementKeys.Add(Keys.W, ButtonState.UP); 
         }
 
         /// <summary>
@@ -44,22 +61,56 @@ namespace Portal.ComponentPattern
             //handles input
             InputHandler.Instance.Execute(this);
 
-            // keep moving until goal is reached 
-            int offset = 5;
-
-            if (GameObject.Transform.Position.X <= goalPosition.X - offset || GameObject.Transform.Position.Y <= goalPosition.Y - offset ||
-               GameObject.Transform.Position.X >= goalPosition.X + offset || GameObject.Transform.Position.Y >= goalPosition.Y + offset)
+            if (isFalling)
             {
-                Move(goalPosition);
+                // make player fall 
+                GameObject.Transform.Translate(gravity * GameWorld.DeltaTime);
+            }
+
+            // update jump cooldown 
+            jumpCooldown += GameWorld.DeltaTime;
+
+            if (hasJumped)
+            {
+                if(jumpCooldown < 0.1f)
+                {
+                    Vector2 velocity = new Vector2(0, -5f) * speed;
+                    GameObject.Transform.Translate(velocity * GameWorld.DeltaTime);
+                }
+                else if (jumpCooldown < 0.3f)
+                {
+                    Vector2 velocity = new Vector2(0, -1.5f) * speed;
+                    GameObject.Transform.Translate(velocity * GameWorld.DeltaTime);
+                }
+                else
+                {
+                    hasJumped = false;
+                }
+            }
+
+            // make player turn forward 
+            //if (movementKeys[Keys.A] == ButtonState.UP && movementKeys[Keys.D] == ButtonState.UP)
+            //{
+            //    animator.PlayAnimation("Forward");
+            //}
+        }
+
+        public void Jump()
+        {
+            if (!isFalling && jumpCooldown > 0.5f)
+            {
+                Debug.WriteLine("jump");
+                //Vector2 jump = new Vector2(0, -25) * speed;
+                //GameObject.Transform.Translate(jump * GameWorld.DeltaTime);
+
+                hasJumped = true; 
+
+                jumpCooldown = 0; 
             }
         }
 
-        public void Move(Vector2 endPoint)
+        public void Move(Vector2 velocity)
         {
-            goalPosition = endPoint;
-
-            Vector2 velocity = new Vector2(endPoint.X - GameObject.Transform.Position.X, endPoint.Y - GameObject.Transform.Position.Y);
-
             if (velocity != Vector2.Zero)
             {
                 velocity.Normalize();
@@ -71,6 +122,102 @@ namespace Portal.ComponentPattern
 
         public void Notify(GameEvent gameEvent)
         {
+            if(gameEvent is CollisionEvent)
+            {
+                GameObject other = (gameEvent as CollisionEvent).Other;
+
+                if (other.Tag == "Tile")
+                {
+                    //Debug.WriteLine("tile");
+                    isFalling = true;
+                }
+                if (other.Tag == "CollisionTile")
+                {
+                    //Debug.WriteLine("tile");
+                    isFalling = true;
+                }
+            }
+
+
+            if(gameEvent is TopCollisionEvent)
+            {
+                GameObject other = (gameEvent as TopCollisionEvent).Other;
+
+                //if (other.Tag == "Tile")
+                //{
+                //    //Debug.WriteLine("tile");
+                //    isFalling = true;
+                //}
+                if (other.Tag == "CollisionTile")
+                {
+                    //Debug.WriteLine("top");
+                    isFalling = false;
+
+                    GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X, 
+                                                                other.Transform.Position.Y - (spriteRenderer.Sprite.Height + spriteRenderer.Origin.Y)); 
+                }
+            }
+            if (gameEvent is BottomCollisionEvent)
+            {
+                GameObject other = (gameEvent as BottomCollisionEvent).Other;
+
+                if (other.Tag == "CollisionTile")
+                {
+                    Debug.WriteLine("bottom");
+
+                    //GameObject.Transform.Translate(new Vector2(0, 1) * speed * GameWorld.DeltaTime);
+
+                    //GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X, 
+                    //                                            other.Transform.Position.Y + (spriteRenderer.Sprite.Height - spriteRenderer.Origin.Y));
+
+                    jumpCooldown = 1; 
+
+                    SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
+
+                    GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
+                                                                other.Transform.Position.Y + (otherSpriteRenderer.Sprite.Height + spriteRenderer.Sprite.Height / 2));
+                }
+            }
+            if (gameEvent is RightCollisionEvent)
+            {
+                GameObject other = (gameEvent as RightCollisionEvent).Other;
+
+                if (other.Tag == "CollisionTile")
+                {
+                    Debug.WriteLine("right");
+
+                    //Vector2 right = new Vector2(+speed, 0);
+                    //GameObject.Transform.Translate(right * GameWorld.DeltaTime);
+
+                    SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
+
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X + otherSpriteRenderer.Sprite.Width + spriteRenderer.Origin.X,
+                                                                GameObject.Transform.Position.Y);
+                }
+            }
+            if (gameEvent is LeftCollisionEvent)
+            {
+                GameObject other = (gameEvent as LeftCollisionEvent).Other;
+
+                if (other.Tag == "CollisionTile")
+                {
+                    Debug.WriteLine("left");
+
+                    //Vector2 left = new Vector2(-speed, 0);
+                    //GameObject.Transform.Translate(left * GameWorld.DeltaTime);
+
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X - (spriteRenderer.Sprite.Width + spriteRenderer.Origin.X),
+                                                                GameObject.Transform.Position.Y);
+                }
+            }
+
+
+            if (gameEvent is ButtonEvent)
+            {
+                ButtonEvent buttonEvent = (gameEvent as ButtonEvent);
+
+                movementKeys[buttonEvent.Key] = buttonEvent.State;
+            }
 
         }
         #endregion
