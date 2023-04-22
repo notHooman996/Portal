@@ -99,9 +99,7 @@ namespace Portal.ComponentPattern
         {
             if (!isFalling && jumpCooldown > 0.5f)
             {
-                Debug.WriteLine("jump");
-                //Vector2 jump = new Vector2(0, -25) * speed;
-                //GameObject.Transform.Translate(jump * GameWorld.DeltaTime);
+                //Debug.WriteLine("jump");
 
                 hasJumped = true; 
 
@@ -133,7 +131,7 @@ namespace Portal.ComponentPattern
                 }
                 if (other.Tag == "CollisionTile")
                 {
-                    //Debug.WriteLine("tile");
+                    //Debug.WriteLine("collision tile");
                     isFalling = true;
                 }
             }
@@ -143,11 +141,6 @@ namespace Portal.ComponentPattern
             {
                 GameObject other = (gameEvent as TopCollisionEvent).Other;
 
-                //if (other.Tag == "Tile")
-                //{
-                //    //Debug.WriteLine("tile");
-                //    isFalling = true;
-                //}
                 if (other.Tag == "CollisionTile")
                 {
                     //Debug.WriteLine("top");
@@ -163,12 +156,7 @@ namespace Portal.ComponentPattern
 
                 if (other.Tag == "CollisionTile")
                 {
-                    Debug.WriteLine("bottom");
-
-                    //GameObject.Transform.Translate(new Vector2(0, 1) * speed * GameWorld.DeltaTime);
-
-                    //GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X, 
-                    //                                            other.Transform.Position.Y + (spriteRenderer.Sprite.Height - spriteRenderer.Origin.Y));
+                    //Debug.WriteLine("bottom");
 
                     jumpCooldown = 1; 
 
@@ -184,10 +172,7 @@ namespace Portal.ComponentPattern
 
                 if (other.Tag == "CollisionTile")
                 {
-                    Debug.WriteLine("right");
-
-                    //Vector2 right = new Vector2(+speed, 0);
-                    //GameObject.Transform.Translate(right * GameWorld.DeltaTime);
+                    //Debug.WriteLine("right");
 
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
@@ -201,10 +186,7 @@ namespace Portal.ComponentPattern
 
                 if (other.Tag == "CollisionTile")
                 {
-                    Debug.WriteLine("left");
-
-                    //Vector2 left = new Vector2(-speed, 0);
-                    //GameObject.Transform.Translate(left * GameWorld.DeltaTime);
+                    //Debug.WriteLine("left");
 
                     GameObject.Transform.Position = new Vector2(other.Transform.Position.X - (spriteRenderer.Sprite.Width + spriteRenderer.Origin.X),
                                                                 GameObject.Transform.Position.Y);
