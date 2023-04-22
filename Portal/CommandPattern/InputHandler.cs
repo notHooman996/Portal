@@ -3,9 +3,13 @@ using Microsoft.Xna.Framework.Input;
 using Portal.ComponentPattern;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Portal.CommandPattern
 {
@@ -29,6 +33,15 @@ namespace Portal.CommandPattern
 
         #region fields
         private Dictionary<KeyInfo, ICommand> keybinds = new Dictionary<KeyInfo, ICommand>();
+
+        //private Dictionary<ButtonInfo, ICommand> mousebinds = new Dictionary<ButtonInfo, ICommand>();
+
+
+
+        float leftClickCooldown = 5;
+        float rightClickCooldown = 5;
+        float cooldown = 1; 
+
         #endregion
 
         #region methods
@@ -39,10 +52,13 @@ namespace Portal.CommandPattern
         {
             keybinds.Add(new KeyInfo(Keys.A), new MoveCommand(new Vector2(-1, 0)));
             keybinds.Add(new KeyInfo(Keys.D), new MoveCommand(new Vector2(1, 0)));
-            //keybinds.Add(new KeyInfo(Keys.W), new MoveCommand(new Vector2(0, -1)));
-            //keybinds.Add(new KeyInfo(Keys.S), new MoveCommand(new Vector2(0, 1)));
-            //keybinds.Add(new KeyInfo(Keys.Space), new ShootCommand());
-            keybinds.Add(new KeyInfo(Keys.W), new JumpCommand()); 
+            keybinds.Add(new KeyInfo(Keys.W), new JumpCommand());
+
+            //mousebinds.Add(new ButtonInfo(MouseButtons.Left), new ShootCommand());
+            //mousebinds.Add(new ButtonInfo(MouseButtons.Right), new ChangeBeamCommand());
+
+            //mousebinds.Add(new ButtonInfo(Mouse.GetState().LeftButton), new ShootCommand());
+            //mousebinds.Add(new ButtonInfo(Mouse.GetState().RightButton), new ChangeBeamCommand());
         }
 
         /// <summary>
@@ -60,11 +76,73 @@ namespace Portal.CommandPattern
                     keybinds[keyInfo].Execute(player);
                     keyInfo.IsDown = true;
                 }
-                if (!keyState.IsKeyDown(keyInfo.Key) && keyInfo.IsDown == true)
+                if (!keyState.IsKeyDown(keyInfo.Key) && keyInfo.IsDown)
                 {
                     keyInfo.IsDown = false;
                 }
             }
+
+
+
+
+            MouseState mouseState = Mouse.GetState();
+
+            leftClickCooldown += GameWorld.DeltaTime; 
+            rightClickCooldown += GameWorld.DeltaTime;
+
+            if (mouseState.LeftButton == ButtonState.Pressed && leftClickCooldown > cooldown)
+            {
+                player.Shoot();
+
+                leftClickCooldown = 0; 
+            }
+
+            if(mouseState.RightButton == ButtonState.Pressed && rightClickCooldown > cooldown)
+            {
+                player.ChangeBeam();
+
+                rightClickCooldown = 0; 
+            }
+
+
+            //foreach (ButtonInfo buttonInfo in mousebinds.Keys)
+            //{
+            //    if(mouseState.Equals(buttonInfo.MouseButton))
+            //    {
+            //        player.Shoot();
+            //        buttonInfo.IsDown = true; 
+            //    }
+            //    if(!mouseState.Equals(buttonInfo.MouseButton) && buttonInfo.IsDown)
+            //    {
+            //        buttonInfo.IsDown = false;
+            //    }
+            //}
+
+
+
+            //Debug.WriteLine(mouseState);
+            //Debug.WriteLine(mouseState.LeftButton);
+            //Debug.WriteLine(mouseState.RightButton);
+
+            //foreach (ButtonInfo buttonInfo in mousebinds.Keys)
+            //{
+
+            //    Debug.WriteLine(buttonInfo.State);
+
+
+            //    if (buttonInfo.State == ButtonState.Pressed)
+            //    {
+            //        Debug.WriteLine("test");
+
+            //        mousebinds[buttonInfo].Execute(player);
+            //        buttonInfo.IsDown = true; 
+            //    }
+            //    if(buttonInfo.State == ButtonState.Released && buttonInfo.IsDown)
+            //    {
+            //        buttonInfo.IsDown = false; 
+            //    }
+            //}
+
         }
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Portal.CommandPattern;
+using Portal.CreationalPattern;
 using Portal.ObserverPattern;
 using Portal.ObserverPattern.TileCollisionEvents;
 using System;
@@ -26,6 +27,10 @@ namespace Portal.ComponentPattern
         private Vector2 gravity;
 
         private Dictionary<Keys, ButtonState> movementKeys = new Dictionary<Keys, ButtonState>();
+
+        private bool canShoot;
+        private BeamType beamType = BeamType.Red; 
+
         #endregion
 
         #region methods
@@ -104,6 +109,29 @@ namespace Portal.ComponentPattern
                 hasJumped = true; 
 
                 jumpCooldown = 0; 
+            }
+        }
+
+        public void Shoot()
+        {
+            Debug.WriteLine("shoot"); 
+
+            GameObject gameObject = BeamFactory.Instance.Create(beamType);
+            gameObject.Transform.Position = GameObject.Transform.Position; 
+            GameWorld.Instance.Instantiate(gameObject); 
+        }
+
+        public void ChangeBeam()
+        {
+            Debug.WriteLine("change beam"); 
+
+            if(beamType == BeamType.Red)
+            {
+                beamType = BeamType.Blue; 
+            }
+            else if(beamType == BeamType.Blue)
+            {
+                beamType = BeamType.Red; 
             }
         }
 
