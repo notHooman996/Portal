@@ -123,8 +123,7 @@ namespace Portal.ComponentPattern
             beamObject.Transform.Position = GameObject.Transform.Position;
 
             //Atan2 gives an angle measured in radians, between -Pi abd Pi
-            float f = MathF.Atan2(direction.Y - beamObject.Transform.Position.Y, direction.X - beamObject.Transform.Position.X);
-            beamObject.Transform.Rotation = f;
+            beamObject.Transform.Rotation = MathF.Atan2(direction.Y - beamObject.Transform.Position.Y, direction.X - beamObject.Transform.Position.X);
 
             if (beamType == BeamType.Red)
             {

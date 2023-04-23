@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.ComponentPattern.Beams
+namespace Portal.ComponentPattern.Portals
 {
-    public class BlueBeam : Beam
+    public class RedPortal : Portal
     {
     }
 }

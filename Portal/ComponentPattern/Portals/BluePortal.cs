@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.ComponentPattern
+namespace Portal.ComponentPattern.Portals
 {
-    public class Portal : Component
+    public class BluePortal : Portal
     {
     }
 }

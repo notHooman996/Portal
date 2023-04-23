@@ -1,54 +1,49 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Portal.ComponentPattern.Beams;
 using Portal.ComponentPattern;
-using Portal.ComponentPattern.Beams;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Portal.ComponentPattern.Portals;
 
 namespace Portal.CreationalPattern
 {
-    public enum BeamType
+    public class PortalFactory : Factory
     {
-        Red, 
-        Blue 
-    }
+        private static PortalFactory instance;
 
-    public class BeamFactory : Factory
-    {
-        private static BeamFactory instance;
-
-        public static BeamFactory Instance
+        public static PortalFactory Instance
         {
             get
             {
-                if(instance == null)
+                if (instance == null)
                 {
-                    instance = new BeamFactory();
+                    instance = new PortalFactory();
                 }
-                return instance; 
+                return instance;
             }
         }
 
         private GameObject redPrototype;
-        private GameObject bluePrototype; 
+        private GameObject bluePrototype;
 
-        private BeamFactory()
+        private PortalFactory()
         {
             CreateRedPrototype();
-            CreateBluePrototype(); 
+            CreateBluePrototype();
         }
 
         private void CreateRedPrototype()
         {
             redPrototype = new GameObject();
             SpriteRenderer spriteRenderer = (SpriteRenderer)redPrototype.AddComponent(new SpriteRenderer());
-            spriteRenderer.SetSprite("Beam\\redportal_beam");
+            spriteRenderer.SetSprite("Portal\\redportal_back");
             spriteRenderer.LayerDepth = 0.9f;
             spriteRenderer.Scale = 1f;
             spriteRenderer.Color = new Color(255, 255, 255);
-            redPrototype.AddComponent(new RedBeam());
+            redPrototype.AddComponent(new RedPortal());
             redPrototype.AddComponent(new Collider());
         }
 
@@ -56,11 +51,11 @@ namespace Portal.CreationalPattern
         {
             bluePrototype = new GameObject();
             SpriteRenderer spriteRenderer = (SpriteRenderer)bluePrototype.AddComponent(new SpriteRenderer());
-            spriteRenderer.SetSprite("Beam\\blueportal_beam");
+            spriteRenderer.SetSprite("Portal\\blueportal_back");
             spriteRenderer.LayerDepth = 0.9f;
             spriteRenderer.Scale = 1f;
             spriteRenderer.Color = new Color(255, 255, 255);
-            bluePrototype.AddComponent(new BlueBeam());
+            bluePrototype.AddComponent(new BluePortal());
             bluePrototype.AddComponent(new Collider());
         }
 
@@ -74,17 +69,15 @@ namespace Portal.CreationalPattern
                 case BeamType.Red:
                     gameObject = (GameObject)redPrototype.Clone();
                     collider = gameObject.GetComponent<Collider>() as Collider;
-                    RedBeam redBeam = gameObject.GetComponent<RedBeam>() as RedBeam;
-                    collider.CollisionEvent.Attach(redBeam);
-                    redBeam.BeamType = BeamType.Red; 
+                    RedPortal redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
+                    collider.CollisionEvent.Attach(redPortal); 
                     break;
                 case BeamType.Blue:
                     gameObject = (GameObject)bluePrototype.Clone();
                     collider = gameObject.GetComponent<Collider>() as Collider;
-                    BlueBeam blueBeam = gameObject.GetComponent<BlueBeam>() as BlueBeam;
-                    collider.CollisionEvent.Attach(blueBeam);
-                    blueBeam.BeamType = BeamType.Blue; 
-                    break; 
+                    RedPortal bluePortal = gameObject.GetComponent<RedPortal>() as RedPortal;
+                    collider.CollisionEvent.Attach(bluePortal);
+                    break;
             }
 
             return gameObject; 

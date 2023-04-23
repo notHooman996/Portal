@@ -17,9 +17,9 @@ namespace Portal.ComponentPattern
         private SpriteRenderer spriteRenderer = new SpriteRenderer();
         private Texture2D texture;
 
-        private Lazy<List<RectangleData>> rectangles;
+        //private Lazy<List<RectangleData>> rectangles;
 
-        private bool loaded = false;
+        //private bool loaded = false;
         #endregion
 
         #region properties
@@ -82,7 +82,7 @@ namespace Portal.ComponentPattern
             //    DrawRectangle(rd.Rectangle, spriteBatch);
             //}
 
-            //DrawRectangle(CollisionBox, spriteBatch);
+            DrawRectangle(CollisionBox, spriteBatch);
         }
 
         public void DrawRectangle(Rectangle collisionBox, SpriteBatch spriteBatch)
