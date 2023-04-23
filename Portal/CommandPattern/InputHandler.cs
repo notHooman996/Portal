@@ -34,10 +34,6 @@ namespace Portal.CommandPattern
         #region fields
         private Dictionary<KeyInfo, ICommand> keybinds = new Dictionary<KeyInfo, ICommand>();
 
-        //private Dictionary<ButtonInfo, ICommand> mousebinds = new Dictionary<ButtonInfo, ICommand>();
-
-
-
         float leftClickCooldown = 5;
         float rightClickCooldown = 5;
         float cooldown = 1; 
@@ -53,12 +49,6 @@ namespace Portal.CommandPattern
             keybinds.Add(new KeyInfo(Keys.A), new MoveCommand(new Vector2(-1, 0)));
             keybinds.Add(new KeyInfo(Keys.D), new MoveCommand(new Vector2(1, 0)));
             keybinds.Add(new KeyInfo(Keys.W), new JumpCommand());
-
-            //mousebinds.Add(new ButtonInfo(MouseButtons.Left), new ShootCommand());
-            //mousebinds.Add(new ButtonInfo(MouseButtons.Right), new ChangeBeamCommand());
-
-            //mousebinds.Add(new ButtonInfo(Mouse.GetState().LeftButton), new ShootCommand());
-            //mousebinds.Add(new ButtonInfo(Mouse.GetState().RightButton), new ChangeBeamCommand());
         }
 
         /// <summary>
@@ -103,45 +93,6 @@ namespace Portal.CommandPattern
 
                 rightClickCooldown = 0; 
             }
-
-
-            //foreach (ButtonInfo buttonInfo in mousebinds.Keys)
-            //{
-            //    if(mouseState.Equals(buttonInfo.MouseButton))
-            //    {
-            //        player.Shoot();
-            //        buttonInfo.IsDown = true; 
-            //    }
-            //    if(!mouseState.Equals(buttonInfo.MouseButton) && buttonInfo.IsDown)
-            //    {
-            //        buttonInfo.IsDown = false;
-            //    }
-            //}
-
-
-
-            //Debug.WriteLine(mouseState);
-            //Debug.WriteLine(mouseState.LeftButton);
-            //Debug.WriteLine(mouseState.RightButton);
-
-            //foreach (ButtonInfo buttonInfo in mousebinds.Keys)
-            //{
-
-            //    Debug.WriteLine(buttonInfo.State);
-
-
-            //    if (buttonInfo.State == ButtonState.Pressed)
-            //    {
-            //        Debug.WriteLine("test");
-
-            //        mousebinds[buttonInfo].Execute(player);
-            //        buttonInfo.IsDown = true; 
-            //    }
-            //    if(buttonInfo.State == ButtonState.Released && buttonInfo.IsDown)
-            //    {
-            //        buttonInfo.IsDown = false; 
-            //    }
-            //}
 
         }
         #endregion
