@@ -43,7 +43,15 @@ namespace Portal.ComponentPattern.Beams
 
         public void Notify(GameEvent gameEvent)
         {
-            
+            if(gameEvent is CollisionEvent)
+            {
+                GameObject other = (gameEvent as CollisionEvent).Other;
+
+                if(other.Tag == "CollisionTile")
+                {
+                    GameWorld.Instance.Destroy(GameObject);
+                }
+            }
         }
     }
 }
