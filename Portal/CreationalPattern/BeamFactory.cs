@@ -85,10 +85,6 @@ namespace Portal.CreationalPattern
                     break; 
             }
 
-            //Collider collider = gameObject.GetComponent<Collider>() as Collider;
-            //Beam beam = gameObject.GetComponent<Beam>() as Beam;
-            //collider.CollisionEvent.Attach(beam);
-
             return gameObject; 
         }
     }

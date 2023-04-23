@@ -80,20 +80,32 @@ namespace Portal.CommandPattern
             leftClickCooldown += GameWorld.DeltaTime; 
             rightClickCooldown += GameWorld.DeltaTime;
 
-            if (mouseState.LeftButton == ButtonState.Pressed && leftClickCooldown > cooldown)
+            if (mouseState.X >= 0 && mouseState.Y >= 0 &&
+               mouseState.X <= GameWorld.ScreenSize.X && mouseState.Y <= GameWorld.ScreenSize.Y)
             {
-                player.Shoot();
+                if (mouseState.LeftButton == ButtonState.Pressed && leftClickCooldown > cooldown)
+                {
+                    // get the mouse position 
+                    Vector2 mousePoint = new Vector2(mouseState.X, mouseState.Y);
+                    // invert the camera transform matrix 
+                    Matrix invertedMatrix = Matrix.Invert(GameWorld.Instance.Camera.Transform);
+                    // transform the mouse point with the inverted matrix 
+                    Vector2 direction = Vector2.Transform(mousePoint, invertedMatrix); 
 
-                leftClickCooldown = 0; 
+                    //player.Shoot(direction);
+                    //player.Shoot(mousePoint);
+                    player.Shoot(new Vector2(direction.X, direction.Y));
+
+                    leftClickCooldown = 0;
+                }
+
+                if (mouseState.RightButton == ButtonState.Pressed && rightClickCooldown > cooldown)
+                {
+                    player.ChangeBeam();
+
+                    rightClickCooldown = 0;
+                }
             }
-
-            if(mouseState.RightButton == ButtonState.Pressed && rightClickCooldown > cooldown)
-            {
-                player.ChangeBeam();
-
-                rightClickCooldown = 0; 
-            }
-
         }
         #endregion
     }

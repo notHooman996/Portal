@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Portal.BuilderPattern;
 using Portal.ObserverPattern;
 using System;
 using System.Collections.Generic;
@@ -13,25 +14,27 @@ namespace Portal.ComponentPattern.Beams
     {
         private int speed; 
 
+        public Vector2 Direction { get; set; }
+
         public override void Awake()
         {
             speed = 250; 
-
-            //GameObject.Transform.Position = new Vector2(0, 900); 
 
             base.Awake();
         }
 
         public override void Update(GameTime gameTime)
         {
-            Vector2 velocity = new Vector2(1, -1); 
+            Vector2 d = Direction; 
 
-            if (velocity != Vector2.Zero)
+            if (d != Vector2.Zero)
             {
-                velocity.Normalize();
+                d.Normalize();
             }
-            
-            GameObject.Transform.Translate(velocity * speed * GameWorld.DeltaTime);
+
+            d *= speed; 
+
+            GameObject.Transform.Translate(d * GameWorld.DeltaTime);
 
             Debug.WriteLine($"x: {GameObject.Transform.Position.X}\ty: {GameObject.Transform.Position.Y}"); 
 

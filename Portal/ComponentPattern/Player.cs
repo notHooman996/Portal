@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Portal.CommandPattern;
+using Portal.ComponentPattern.Beams;
 using Portal.CreationalPattern;
 using Portal.ObserverPattern;
 using Portal.ObserverPattern.TileCollisionEvents;
@@ -112,13 +113,31 @@ namespace Portal.ComponentPattern
             }
         }
 
-        public void Shoot()
+        public void Shoot(Vector2 direction)
         {
-            Debug.WriteLine("shoot"); 
+            //Debug.WriteLine("shoot");
 
-            GameObject gameObject = BeamFactory.Instance.Create(beamType);
-            gameObject.Transform.Position = GameObject.Transform.Position; 
-            GameWorld.Instance.Instantiate(gameObject); 
+            //Debug.WriteLine($"x: {direction.X}\ty: {direction.Y}");
+
+            GameObject beamObject = BeamFactory.Instance.Create(beamType);
+            beamObject.Transform.Position = GameObject.Transform.Position;
+
+            //Atan2 gives an angle measured in radians, between -Pi abd Pi
+            float f = MathF.Atan2(direction.Y - beamObject.Transform.Position.Y, direction.X - beamObject.Transform.Position.X);
+            beamObject.Transform.Rotation = f;
+
+            if (beamType == BeamType.Red)
+            {
+                RedBeam beam = (RedBeam)beamObject.GetComponent<RedBeam>();
+                beam.Direction = new Vector2(direction.X - beamObject.Transform.Position.X, direction.Y - beamObject.Transform.Position.Y);
+            } 
+            else if(beamType == BeamType.Blue)
+            {
+                BlueBeam beam = (BlueBeam)beamObject.GetComponent<BlueBeam>();
+                beam.Direction = new Vector2(direction.X - beamObject.Transform.Position.X, direction.Y - beamObject.Transform.Position.Y);
+            }
+
+            GameWorld.Instance.Instantiate(beamObject); 
         }
 
         public void ChangeBeam()

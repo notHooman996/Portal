@@ -139,7 +139,7 @@ namespace Portal
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Coral);
 
             _spriteBatch.Begin(SpriteSortMode.FrontToBack,
                                BlendState.AlphaBlend,
