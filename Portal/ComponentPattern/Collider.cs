@@ -41,8 +41,8 @@ namespace Portal.ComponentPattern
             {
                 return new Rectangle
                     (
-                        (int)(GameObject.Transform.Position.X - (spriteRenderer.Sprite.Width * spriteRenderer.Scale) / 2),
-                        (int)(GameObject.Transform.Position.Y - (spriteRenderer.Sprite.Height * spriteRenderer.Scale) / 2),
+                        (int)(GameObject.Transform.Position.X - spriteRenderer.Origin.X),
+                        (int)(GameObject.Transform.Position.Y - spriteRenderer.Origin.Y),
                         (int)(spriteRenderer.Sprite.Width * spriteRenderer.Scale),
                         (int)(spriteRenderer.Sprite.Height * spriteRenderer.Scale)
                     );

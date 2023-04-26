@@ -25,10 +25,16 @@ namespace Portal.ComponentPattern
             spriteRenderer.SetSprite($"Tiles\\tile{textureID}");
             spriteRenderer.LayerDepth = 0.1f;
             spriteRenderer.Scale = 2f;
-            spriteRenderer.Color = new Color(255, 255, 255); 
+            spriteRenderer.Color = new Color(255, 255, 255);
 
-            GameObject.Transform.Position = new Vector2(Position.X * Width + (Width / 2), Position.Y * Height + (Height / 2));
+            GameObject.Transform.Position = new Vector2(Position.X * Width, Position.Y * Height);
             GameObject.Tag = "CollisionTile"; 
+        }
+
+        public override void Start()
+        {
+            spriteRenderer = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
+            spriteRenderer.Origin = new Vector2(0, 0); 
         }
 
         public void Notify(GameEvent gameEvent)

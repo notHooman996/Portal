@@ -47,8 +47,14 @@ namespace Portal.ComponentPattern
             spriteRenderer.LayerDepth = 0.1f;
             spriteRenderer.Scale = 2f;
 
-            GameObject.Transform.Position = new Vector2(Position.X * Width + (Width / 2), Position.Y * Height + (Height / 2));
+            GameObject.Transform.Position = new Vector2(Position.X * Width, Position.Y * Height);
             GameObject.Tag = "Tile"; 
+        }
+
+        public override void Start()
+        {
+            spriteRenderer = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
+            spriteRenderer.Origin = new Vector2(0, 0);
         }
         #endregion
     }
