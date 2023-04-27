@@ -75,7 +75,7 @@ namespace Portal.CreationalPattern
                 case BeamType.Blue:
                     gameObject = (GameObject)bluePrototype.Clone();
                     collider = gameObject.GetComponent<Collider>() as Collider;
-                    RedPortal bluePortal = gameObject.GetComponent<RedPortal>() as RedPortal;
+                    BluePortal bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
                     break;
             }
