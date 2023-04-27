@@ -46,7 +46,7 @@ namespace Portal.ComponentPattern
         /// </summary>
         public override void Start()
         {
-            Origin = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
+            Origin = new Vector2((Sprite.Width * Scale) / 2, (Sprite.Height * Scale) / 2); 
         }
 
         /// <summary>

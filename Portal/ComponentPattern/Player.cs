@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Portal.CommandPattern;
+using Portal.ComponentPattern.Beams;
+using Portal.CreationalPattern;
 using Portal.ObserverPattern;
 using Portal.ObserverPattern.TileCollisionEvents;
 using System;
@@ -26,6 +28,10 @@ namespace Portal.ComponentPattern
         private Vector2 gravity;
 
         private Dictionary<Keys, ButtonState> movementKeys = new Dictionary<Keys, ButtonState>();
+
+        private bool canShoot;
+        private BeamType beamType = BeamType.Red; 
+
         #endregion
 
         #region methods
@@ -107,6 +113,46 @@ namespace Portal.ComponentPattern
             }
         }
 
+        public void Shoot(Vector2 direction)
+        {
+            //Debug.WriteLine("shoot");
+
+            //Debug.WriteLine($"x: {direction.X}\ty: {direction.Y}");
+
+            GameObject beamObject = BeamFactory.Instance.Create(beamType);
+            beamObject.Transform.Position = GameObject.Transform.Position;
+
+            //Atan2 gives an angle measured in radians, between -Pi abd Pi
+            beamObject.Transform.Rotation = MathF.Atan2(direction.Y - beamObject.Transform.Position.Y, direction.X - beamObject.Transform.Position.X);
+
+            if (beamType == BeamType.Red)
+            {
+                RedBeam beam = (RedBeam)beamObject.GetComponent<RedBeam>();
+                beam.Direction = new Vector2(direction.X - beamObject.Transform.Position.X, direction.Y - beamObject.Transform.Position.Y);
+            } 
+            else if(beamType == BeamType.Blue)
+            {
+                BlueBeam beam = (BlueBeam)beamObject.GetComponent<BlueBeam>();
+                beam.Direction = new Vector2(direction.X - beamObject.Transform.Position.X, direction.Y - beamObject.Transform.Position.Y);
+            }
+
+            GameWorld.Instance.Instantiate(beamObject); 
+        }
+
+        public void ChangeBeam()
+        {
+            Debug.WriteLine("change beam"); 
+
+            if(beamType == BeamType.Red)
+            {
+                beamType = BeamType.Blue; 
+            }
+            else if(beamType == BeamType.Blue)
+            {
+                beamType = BeamType.Red; 
+            }
+        }
+
         public void Move(Vector2 velocity)
         {
             if (velocity != Vector2.Zero)
@@ -129,11 +175,6 @@ namespace Portal.ComponentPattern
                     //Debug.WriteLine("tile");
                     isFalling = true;
                 }
-                if (other.Tag == "CollisionTile")
-                {
-                    //Debug.WriteLine("collision tile");
-                    isFalling = true;
-                }
             }
 
 
@@ -146,8 +187,8 @@ namespace Portal.ComponentPattern
                     //Debug.WriteLine("top");
                     isFalling = false;
 
-                    GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X, 
-                                                                other.Transform.Position.Y - (spriteRenderer.Sprite.Height + spriteRenderer.Origin.Y)); 
+                    GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
+                                                                other.Transform.Position.Y - spriteRenderer.Origin.Y); 
                 }
             }
             if (gameEvent is BottomCollisionEvent)
@@ -163,7 +204,7 @@ namespace Portal.ComponentPattern
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
                     GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
-                                                                other.Transform.Position.Y + (otherSpriteRenderer.Sprite.Height + spriteRenderer.Sprite.Height / 2));
+                                                                other.Transform.Position.Y + spriteRenderer.Origin.Y + (otherSpriteRenderer.Sprite.Height * otherSpriteRenderer.Scale));
                 }
             }
             if (gameEvent is RightCollisionEvent)
@@ -176,7 +217,7 @@ namespace Portal.ComponentPattern
 
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
-                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X + otherSpriteRenderer.Sprite.Width + spriteRenderer.Origin.X,
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X + spriteRenderer.Origin.X + (otherSpriteRenderer.Sprite.Width * otherSpriteRenderer.Scale),
                                                                 GameObject.Transform.Position.Y);
                 }
             }
@@ -188,7 +229,7 @@ namespace Portal.ComponentPattern
                 {
                     //Debug.WriteLine("left");
 
-                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X - (spriteRenderer.Sprite.Width + spriteRenderer.Origin.X),
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X - spriteRenderer.Origin.X,
                                                                 GameObject.Transform.Position.Y);
                 }
             }

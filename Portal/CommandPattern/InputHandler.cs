@@ -3,9 +3,13 @@ using Microsoft.Xna.Framework.Input;
 using Portal.ComponentPattern;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Portal.CommandPattern
 {
@@ -29,6 +33,11 @@ namespace Portal.CommandPattern
 
         #region fields
         private Dictionary<KeyInfo, ICommand> keybinds = new Dictionary<KeyInfo, ICommand>();
+
+        float leftClickCooldown = 5;
+        float rightClickCooldown = 5;
+        float cooldown = 1; 
+
         #endregion
 
         #region methods
@@ -39,10 +48,7 @@ namespace Portal.CommandPattern
         {
             keybinds.Add(new KeyInfo(Keys.A), new MoveCommand(new Vector2(-1, 0)));
             keybinds.Add(new KeyInfo(Keys.D), new MoveCommand(new Vector2(1, 0)));
-            //keybinds.Add(new KeyInfo(Keys.W), new MoveCommand(new Vector2(0, -1)));
-            //keybinds.Add(new KeyInfo(Keys.S), new MoveCommand(new Vector2(0, 1)));
-            //keybinds.Add(new KeyInfo(Keys.Space), new ShootCommand());
-            keybinds.Add(new KeyInfo(Keys.W), new JumpCommand()); 
+            keybinds.Add(new KeyInfo(Keys.W), new JumpCommand());
         }
 
         /// <summary>
@@ -60,9 +66,44 @@ namespace Portal.CommandPattern
                     keybinds[keyInfo].Execute(player);
                     keyInfo.IsDown = true;
                 }
-                if (!keyState.IsKeyDown(keyInfo.Key) && keyInfo.IsDown == true)
+                if (!keyState.IsKeyDown(keyInfo.Key) && keyInfo.IsDown)
                 {
                     keyInfo.IsDown = false;
+                }
+            }
+
+
+
+
+            MouseState mouseState = Mouse.GetState();
+
+            leftClickCooldown += GameWorld.DeltaTime; 
+            rightClickCooldown += GameWorld.DeltaTime;
+
+            if (mouseState.X >= 0 && mouseState.Y >= 0 &&
+               mouseState.X <= GameWorld.ScreenSize.X && mouseState.Y <= GameWorld.ScreenSize.Y)
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed && leftClickCooldown > cooldown)
+                {
+                    // get the mouse position 
+                    Vector2 mousePoint = new Vector2(mouseState.X, mouseState.Y);
+                    // invert the camera transform matrix 
+                    Matrix invertedMatrix = Matrix.Invert(GameWorld.Instance.Camera.Transform);
+                    // transform the mouse point with the inverted matrix 
+                    Vector2 direction = Vector2.Transform(mousePoint, invertedMatrix); 
+
+                    //player.Shoot(direction);
+                    //player.Shoot(mousePoint);
+                    player.Shoot(new Vector2(direction.X, direction.Y));
+
+                    leftClickCooldown = 0;
+                }
+
+                if (mouseState.RightButton == ButtonState.Pressed && rightClickCooldown > cooldown)
+                {
+                    player.ChangeBeam();
+
+                    rightClickCooldown = 0;
                 }
             }
         }

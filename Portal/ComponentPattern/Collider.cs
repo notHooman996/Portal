@@ -17,9 +17,9 @@ namespace Portal.ComponentPattern
         private SpriteRenderer spriteRenderer = new SpriteRenderer();
         private Texture2D texture;
 
-        private Lazy<List<RectangleData>> rectangles;
+        //private Lazy<List<RectangleData>> rectangles;
 
-        private bool loaded = false;
+        //private bool loaded = false;
         #endregion
 
         #region properties
@@ -41,8 +41,8 @@ namespace Portal.ComponentPattern
             {
                 return new Rectangle
                     (
-                        (int)(GameObject.Transform.Position.X - (spriteRenderer.Sprite.Width * spriteRenderer.Scale) / 2),
-                        (int)(GameObject.Transform.Position.Y - (spriteRenderer.Sprite.Height * spriteRenderer.Scale) / 2),
+                        (int)(GameObject.Transform.Position.X - spriteRenderer.Origin.X),
+                        (int)(GameObject.Transform.Position.Y - spriteRenderer.Origin.Y),
                         (int)(spriteRenderer.Sprite.Width * spriteRenderer.Scale),
                         (int)(spriteRenderer.Sprite.Height * spriteRenderer.Scale)
                     );
@@ -82,7 +82,7 @@ namespace Portal.ComponentPattern
             //    DrawRectangle(rd.Rectangle, spriteBatch);
             //}
 
-            //DrawRectangle(CollisionBox, spriteBatch);
+            DrawRectangle(CollisionBox, spriteBatch);
         }
 
         public void DrawRectangle(Rectangle collisionBox, SpriteBatch spriteBatch)
