@@ -175,11 +175,6 @@ namespace Portal.ComponentPattern
                     //Debug.WriteLine("tile");
                     isFalling = true;
                 }
-                if (other.Tag == "CollisionTile")
-                {
-                    //Debug.WriteLine("collision tile");
-                    isFalling = true;
-                }
             }
 
 
@@ -192,8 +187,8 @@ namespace Portal.ComponentPattern
                     //Debug.WriteLine("top");
                     isFalling = false;
 
-                    GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X, 
-                                                                other.Transform.Position.Y - (spriteRenderer.Sprite.Height + spriteRenderer.Origin.Y)); 
+                    GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
+                                                                other.Transform.Position.Y - spriteRenderer.Origin.Y); 
                 }
             }
             if (gameEvent is BottomCollisionEvent)
@@ -209,7 +204,7 @@ namespace Portal.ComponentPattern
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
                     GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
-                                                                other.Transform.Position.Y + (otherSpriteRenderer.Sprite.Height + spriteRenderer.Sprite.Height / 2));
+                                                                other.Transform.Position.Y + spriteRenderer.Origin.Y + (otherSpriteRenderer.Sprite.Height * otherSpriteRenderer.Scale));
                 }
             }
             if (gameEvent is RightCollisionEvent)
@@ -222,7 +217,7 @@ namespace Portal.ComponentPattern
 
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
-                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X + otherSpriteRenderer.Sprite.Width + spriteRenderer.Origin.X,
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X + spriteRenderer.Origin.X + (otherSpriteRenderer.Sprite.Width * otherSpriteRenderer.Scale),
                                                                 GameObject.Transform.Position.Y);
                 }
             }
@@ -234,7 +229,7 @@ namespace Portal.ComponentPattern
                 {
                     //Debug.WriteLine("left");
 
-                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X - (spriteRenderer.Sprite.Width + spriteRenderer.Origin.X),
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X - spriteRenderer.Origin.X,
                                                                 GameObject.Transform.Position.Y);
                 }
             }
