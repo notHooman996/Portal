@@ -1,19 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Portal.CommandPattern;
-using Portal.ComponentPattern.Beams;
-using Portal.CreationalPattern;
-using Portal.ObserverPattern;
-using Portal.ObserverPattern.TileCollisionEvents;
+using PortalGame.CommandPattern;
+using PortalGame.ComponentPattern.Beams;
+using PortalGame.CreationalPattern;
+using PortalGame.ObserverPattern;
+using PortalGame.ObserverPattern.TileCollisionEvents;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ButtonState = Portal.ObserverPattern.ButtonState;
+using ButtonState = PortalGame.ObserverPattern.ButtonState;
 
-namespace Portal.ComponentPattern
+namespace PortalGame.ComponentPattern
 {
     public class Player : Component, IGameListener
     {

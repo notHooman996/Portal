@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Portal.ComponentPattern;
+using PortalGame.ComponentPattern;
 using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace Portal
+namespace PortalGame
 {
     public class TileMap
     {

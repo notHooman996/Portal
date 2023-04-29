@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Portal.ObserverPattern;
-using Portal.ObserverPattern.TileCollisionEvents;
+using PortalGame.ObserverPattern;
+using PortalGame.ObserverPattern.TileCollisionEvents;
 using System.Diagnostics;
 
-namespace Portal.ComponentPattern
+namespace PortalGame.ComponentPattern
 {
     public class Collider : Component
     {

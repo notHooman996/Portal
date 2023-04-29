@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
-using Portal.ComponentPattern;
-using Portal.ComponentPattern.Beams;
+using PortalGame.ComponentPattern;
+using PortalGame.ComponentPattern.Beams;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.CreationalPattern
+namespace PortalGame.CreationalPattern
 {
     public enum BeamType
     {

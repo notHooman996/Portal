@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using Portal.BuilderPattern;
-using Portal.CreationalPattern;
-using Portal.ObserverPattern;
-using Portal.ObserverPattern.TileCollisionEvents;
+using PortalGame.BuilderPattern;
+using PortalGame.CreationalPattern;
+using PortalGame.ObserverPattern;
+using PortalGame.ObserverPattern.TileCollisionEvents;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.ComponentPattern.Beams
+namespace PortalGame.ComponentPattern.Beams
 {
     public class Beam : Component, IGameListener
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.CommandPattern
+namespace PortalGame.CommandPattern
 {
     public class KeyInfo
     {

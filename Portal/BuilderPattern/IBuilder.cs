@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.BuilderPattern
+namespace PortalGame.BuilderPattern
 {
     public interface IBuilder
     {
