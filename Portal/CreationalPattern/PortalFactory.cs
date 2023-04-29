@@ -1,14 +1,14 @@
-﻿using Portal.ComponentPattern.Beams;
-using Portal.ComponentPattern;
+﻿using PortalGame.ComponentPattern.Beams;
+using PortalGame.ComponentPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Portal.ComponentPattern.Portals;
+using PortalGame.ComponentPattern.Portals;
 
-namespace Portal.CreationalPattern
+namespace PortalGame.CreationalPattern
 {
     public class PortalFactory : Factory
     {
@@ -61,6 +61,27 @@ namespace Portal.CreationalPattern
 
         public override GameObject Create(Enum type)
         {
+            // set all other portals to be old 
+            //List<Portal> portals = GameWorld.Instance.FindAllObjectsOfType<Portal>();
+            //foreach (Portal portal in portals)
+            //{
+            //    portal.IsNewest = false; 
+            //}
+
+            RedPortal oldRedPortal = (RedPortal)GameWorld.Instance.FindObjectOfType<RedPortal>();
+            if(oldRedPortal != null)
+            {
+                oldRedPortal.IsNewest = false;
+            }
+            
+            BluePortal oldBluePortal = (BluePortal)GameWorld.Instance.FindObjectOfType<BluePortal>();
+            if(oldBluePortal != null)
+            {
+                oldBluePortal.IsNewest = false;
+            }
+            
+
+
             GameObject gameObject = new GameObject();
             Collider collider; 
 
@@ -78,9 +99,12 @@ namespace Portal.CreationalPattern
 
                     // create new portal 
                     gameObject = (GameObject)redPrototype.Clone();
+                    gameObject.Tag = BeamType.Red.ToString();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     RedPortal redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
-                    collider.CollisionEvent.Attach(redPortal); 
+                    collider.CollisionEvent.Attach(redPortal);
+
+                    redPortal.IsNewest = true; 
                     break;
                 case BeamType.Blue:
                     // remove old portal 
@@ -94,9 +118,12 @@ namespace Portal.CreationalPattern
 
                     // create new portal 
                     gameObject = (GameObject)bluePrototype.Clone();
+                    gameObject.Tag = BeamType.Blue.ToString(); 
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     BluePortal bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
+
+                    bluePortal.IsNewest = true;
                     break;
             }
 
