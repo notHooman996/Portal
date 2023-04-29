@@ -67,12 +67,32 @@ namespace Portal.CreationalPattern
             switch (type)
             {
                 case BeamType.Red:
+                    // remove old portal 
+                    // find the red portal object 
+                    GameObject redPortalObject = GameWorld.Instance.GetObjectOfType<RedPortal>();
+                    // destroy red portal 
+                    if (redPortalObject != null)
+                    {
+                        GameWorld.Instance.Destroy(redPortalObject);
+                    }
+
+                    // create new portal 
                     gameObject = (GameObject)redPrototype.Clone();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     RedPortal redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
                     collider.CollisionEvent.Attach(redPortal); 
                     break;
                 case BeamType.Blue:
+                    // remove old portal 
+                    // find the blue portal object 
+                    GameObject bluePortalObject = GameWorld.Instance.GetObjectOfType<BluePortal>();
+                    // destroy blue portal 
+                    if (bluePortalObject != null)
+                    {
+                        GameWorld.Instance.Destroy(bluePortalObject);
+                    }
+
+                    // create new portal 
                     gameObject = (GameObject)bluePrototype.Clone();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     BluePortal bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
