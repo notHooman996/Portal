@@ -238,6 +238,20 @@ namespace Portal
             }
             return null;
         }
+
+        public GameObject GetObjectOfType<T>() where T : Component
+        {
+            foreach (GameObject gameObject in gameObjects)
+            {
+                Component c = gameObject.GetComponent<T>();
+
+                if (c != null)
+                {
+                    return gameObject;
+                }
+            }
+            return null;
+        }
         #endregion
     }
 }
