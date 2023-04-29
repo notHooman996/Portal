@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.CreationalPattern
+namespace PortalGame.CreationalPattern
 {
     public abstract class Factory
     {

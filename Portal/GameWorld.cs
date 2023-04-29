@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Portal.BuilderPattern;
-using Portal.ComponentPattern;
+using PortalGame.BuilderPattern;
+using PortalGame.ComponentPattern;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Component = Portal.ComponentPattern.Component;
+using Component = PortalGame.ComponentPattern.Component;
 
-namespace Portal
+namespace PortalGame
 {
     public class GameWorld : Game
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.ComponentPattern.Beams
+namespace PortalGame.ComponentPattern.Beams
 {
     public class BlueBeam : Beam
     {

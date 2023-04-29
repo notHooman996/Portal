@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Portal.ObserverPattern;
+using PortalGame.ObserverPattern;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.ComponentPattern
+namespace PortalGame.ComponentPattern
 {
     public class CollisionTile : Tile, IGameListener
     {

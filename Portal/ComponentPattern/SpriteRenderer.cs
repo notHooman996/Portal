@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Portal.ComponentPattern
+namespace PortalGame.ComponentPattern
 {
     public class SpriteRenderer : Component
     {
