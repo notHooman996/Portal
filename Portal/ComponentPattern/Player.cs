@@ -31,7 +31,6 @@ namespace PortalGame.ComponentPattern
         private Dictionary<Keys, ButtonState> movementKeys = new Dictionary<Keys, ButtonState>();
 
         private bool canShoot;
-        private BeamType beamType = BeamType.Red; 
 
         #endregion
 
@@ -106,20 +105,14 @@ namespace PortalGame.ComponentPattern
         {
             if (!isFalling && jumpCooldown > 0.5f)
             {
-                //Debug.WriteLine("jump");
-
                 hasJumped = true; 
 
                 jumpCooldown = 0; 
             }
         }
 
-        public void Shoot(Vector2 direction)
+        public void Shoot(Vector2 direction, BeamType beamType)
         {
-            //Debug.WriteLine("shoot");
-
-            //Debug.WriteLine($"x: {direction.X}\ty: {direction.Y}");
-
             GameObject beamObject = BeamFactory.Instance.Create(beamType);
             beamObject.Transform.Position = GameObject.Transform.Position;
 
@@ -138,20 +131,6 @@ namespace PortalGame.ComponentPattern
             }
 
             GameWorld.Instance.Instantiate(beamObject); 
-        }
-
-        public void ChangeBeam()
-        {
-            Debug.WriteLine("change beam"); 
-
-            if(beamType == BeamType.Red)
-            {
-                beamType = BeamType.Blue; 
-            }
-            else if(beamType == BeamType.Blue)
-            {
-                beamType = BeamType.Red; 
-            }
         }
 
         public void Move(Vector2 velocity)
