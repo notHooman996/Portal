@@ -11,6 +11,12 @@ namespace PortalGame.ComponentPattern
 {
     public class CollisionTile : Tile, IGameListener
     {
+        public bool HasTop { get; set; }
+        public bool HasBottom { get; set; }
+        public bool HasLeft { get; set; }
+        public bool HasRight { get; set; }
+
+
         public CollisionTile(Point position, int width, int height, int textureID) : base(position, width, height, textureID)
         {
             Position = position;
