@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using PortalGame.CommandPattern;
 using PortalGame.ComponentPattern.Beams;
+using PortalGame.ComponentPattern.Portals;
 using PortalGame.CreationalPattern;
 using PortalGame.ObserverPattern;
 using PortalGame.ObserverPattern.TileCollisionEvents;
@@ -174,6 +175,30 @@ namespace PortalGame.ComponentPattern
                 {
                     //Debug.WriteLine("tile");
                     isFalling = true;
+                }
+
+                // make sure both portals exists 
+                RedPortal redPortal = (RedPortal)GameWorld.Instance.FindObjectOfType<RedPortal>();
+                BluePortal bluePortal = (BluePortal)GameWorld.Instance.FindObjectOfType<BluePortal>();
+                if (redPortal != null && bluePortal != null)
+                {
+                    // when colliding with portal 
+                    if (other.Tag == BeamType.Red.ToString())
+                    {
+                        // get blue portals position 
+                        GameObject bluePortalObject = GameWorld.Instance.GetObjectOfType<BluePortal>();
+
+                        // set players position to blue portal, plus offset 
+                        GameObject.Transform.Position = bluePortalObject.Transform.Position + (bluePortal.PlayerDisplacement * spriteRenderer.Sprite.Width); 
+                    }
+                    if (other.Tag == BeamType.Blue.ToString())
+                    {
+                        // get red portals position 
+                        GameObject redPortalObject = GameWorld.Instance.GetObjectOfType<RedPortal>();
+
+                        // set player position to red portal, plus offset 
+                        GameObject.Transform.Position = redPortalObject.Transform.Position + (redPortal.PlayerDisplacement * spriteRenderer.Sprite.Width);
+                    }
                 }
             }
 

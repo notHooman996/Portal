@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Portal.CreationalPattern;
 using PortalGame.BuilderPattern;
 using PortalGame.CreationalPattern;
 using PortalGame.ObserverPattern;
@@ -81,27 +82,54 @@ namespace PortalGame.ComponentPattern.Beams
                         // place portals in middle of side, and rotate it 
                         if (side == "top" && !tile.HasTop)
                         {
-                            portalObject = PortalFactory.Instance.Create(BeamType);
+                            //portalObject = PortalFactory.Instance.Create(BeamType);
+
+                            if(BeamType is BeamType.Red)
+                            {
+                                portalObject = RedPortalFactory.Instance.Create(Side.Top); 
+                            }
+                            else
+                            {
+                                portalObject = BluePortalFactory.Instance.Create(Side.Top);
+                            }
 
                             portalObject.Transform.Position = new Vector2(other.Transform.Position.X + otherOrigin.X, 
                                                                           other.Transform.Position.Y);
-                            portalObject.Transform.Rotation = (float)Math.PI * 0.5f;
+                            //portalObject.Transform.Rotation = (float)Math.PI * 0.5f;
 
                             GameWorld.Instance.Instantiate(portalObject);
                         }
                         else if (side == "bottom" && !tile.HasBottom)
                         {
-                            portalObject = PortalFactory.Instance.Create(BeamType);
+                            //portalObject = PortalFactory.Instance.Create(BeamType);
+
+                            if (BeamType is BeamType.Red)
+                            {
+                                portalObject = RedPortalFactory.Instance.Create(Side.Bottom);
+                            }
+                            else
+                            {
+                                portalObject = BluePortalFactory.Instance.Create(Side.Bottom);
+                            }
 
                             portalObject.Transform.Position = new Vector2(other.Transform.Position.X + otherOrigin.X,
                                                                           other.Transform.Position.Y + (otherSpriteRenderer.Sprite.Height * otherSpriteRenderer.Scale));
-                            portalObject.Transform.Rotation = (float)Math.PI * 0.5f;
+                            //portalObject.Transform.Rotation = (float)Math.PI * 0.5f;
 
                             GameWorld.Instance.Instantiate(portalObject);
                         }
                         else if (side == "left" && !tile.HasLeft)
                         {
-                            portalObject = PortalFactory.Instance.Create(BeamType);
+                            //portalObject = PortalFactory.Instance.Create(BeamType);
+
+                            if (BeamType is BeamType.Red)
+                            {
+                                portalObject = RedPortalFactory.Instance.Create(Side.Left);
+                            }
+                            else
+                            {
+                                portalObject = BluePortalFactory.Instance.Create(Side.Left);
+                            }
 
                             portalObject.Transform.Position = new Vector2(other.Transform.Position.X,
                                                                           other.Transform.Position.Y + otherOrigin.Y);
@@ -110,7 +138,16 @@ namespace PortalGame.ComponentPattern.Beams
                         }
                         else if (side == "right" && !tile.HasRight)
                         {
-                            portalObject = PortalFactory.Instance.Create(BeamType);
+                            //portalObject = PortalFactory.Instance.Create(BeamType);
+
+                            if (BeamType is BeamType.Red)
+                            {
+                                portalObject = RedPortalFactory.Instance.Create(Side.Right);
+                            }
+                            else
+                            {
+                                portalObject = BluePortalFactory.Instance.Create(Side.Right);
+                            }
 
                             portalObject.Transform.Position = new Vector2(other.Transform.Position.X + (otherSpriteRenderer.Sprite.Width * otherSpriteRenderer.Scale),
                                                                           other.Transform.Position.Y + otherOrigin.Y);

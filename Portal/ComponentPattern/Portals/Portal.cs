@@ -14,6 +14,8 @@ namespace PortalGame.ComponentPattern.Portals
     {
         public bool IsNewest { get; set; }
 
+        public Vector2 PlayerDisplacement { get; set; }
+
         public override void Awake()
         {
             base.Awake();
