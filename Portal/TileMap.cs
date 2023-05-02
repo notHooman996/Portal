@@ -84,12 +84,14 @@ namespace PortalGame
                     break; 
                 case 1:
                     tile = (CollisionTile)gameObject.AddComponent(new CollisionTile(position, tileSize, tileSize, 1));
+                    CheckNeighbour(tile);
                     //gameObject.AddComponent(new SpriteRenderer());
                     //collider = (Collider)gameObject.AddComponent(new Collider());
                     //collider.CollisionEvent.Attach(tile);
                     break;
                 case 2:
                     tile = (CollisionTile)gameObject.AddComponent(new CollisionTile(position, tileSize, tileSize, 2));
+                    CheckNeighbour(tile);
                     //gameObject.AddComponent(new SpriteRenderer());
                     //collider = (Collider)gameObject.AddComponent(new Collider());
                     //collider.CollisionEvent.Attach(tile);
@@ -97,6 +99,35 @@ namespace PortalGame
             }
 
             return gameObject;
+        }
+
+        private void CheckNeighbour(CollisionTile tile)
+        {
+            Point topPoint = new Point(tile.Position.X, tile.Position.Y - 1); 
+            Point bottomPoint = new Point(tile.Position.X, tile.Position.Y + 1); 
+            Point leftPoint = new Point(tile.Position.X - 1, tile.Position.Y); 
+            Point rightPoint = new Point(tile.Position.X + 1, tile.Position.Y); 
+
+            // check top 
+            if (tileTypes.ContainsKey(topPoint) && tileTypes[topPoint] != 0)
+            {
+                tile.HasTop = true; 
+            }
+            // check bottom 
+            if (tileTypes.ContainsKey(bottomPoint) && tileTypes[bottomPoint] != 0)
+            {
+                tile.HasBottom = true; 
+            }
+            // check left 
+            if (tileTypes.ContainsKey(leftPoint) && tileTypes[leftPoint] != 0)
+            {
+                tile.HasLeft = true; 
+            }
+            // check right 
+            if (tileTypes.ContainsKey(rightPoint) && tileTypes[rightPoint] != 0)
+            {
+                tile.HasRight = true; 
+            }
         }
     }
 }
