@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using PortalGame.ComponentPattern;
+using PortalGame.CreationalPattern;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -73,8 +74,6 @@ namespace PortalGame.CommandPattern
             }
 
 
-
-
             MouseState mouseState = Mouse.GetState();
 
             leftClickCooldown += GameWorld.DeltaTime; 
@@ -83,25 +82,23 @@ namespace PortalGame.CommandPattern
             if (mouseState.X >= 0 && mouseState.Y >= 0 &&
                mouseState.X <= GameWorld.ScreenSize.X && mouseState.Y <= GameWorld.ScreenSize.Y)
             {
+                // get the mouse position 
+                Vector2 mousePoint = new Vector2(mouseState.X, mouseState.Y);
+                // invert the camera transform matrix 
+                Matrix invertedMatrix = Matrix.Invert(GameWorld.Instance.Camera.Transform);
+                // transform the mouse point with the inverted matrix 
+                Vector2 direction = Vector2.Transform(mousePoint, invertedMatrix);
+
                 if (mouseState.LeftButton == ButtonState.Pressed && leftClickCooldown > cooldown)
                 {
-                    // get the mouse position 
-                    Vector2 mousePoint = new Vector2(mouseState.X, mouseState.Y);
-                    // invert the camera transform matrix 
-                    Matrix invertedMatrix = Matrix.Invert(GameWorld.Instance.Camera.Transform);
-                    // transform the mouse point with the inverted matrix 
-                    Vector2 direction = Vector2.Transform(mousePoint, invertedMatrix); 
-
-                    //player.Shoot(direction);
-                    //player.Shoot(mousePoint);
-                    player.Shoot(new Vector2(direction.X, direction.Y));
+                    player.Shoot(new Vector2(direction.X, direction.Y), BeamType.Red);
 
                     leftClickCooldown = 0;
                 }
 
                 if (mouseState.RightButton == ButtonState.Pressed && rightClickCooldown > cooldown)
                 {
-                    player.ChangeBeam();
+                    player.Shoot(new Vector2(direction.X, direction.Y), BeamType.Blue);
 
                     rightClickCooldown = 0;
                 }
