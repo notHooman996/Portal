@@ -47,7 +47,6 @@ namespace PortalGame.CreationalPattern
             spriteRenderer.SetSprite("Beam\\redportal_beam");
             spriteRenderer.LayerDepth = 0.9f;
             spriteRenderer.Scale = 1f;
-            spriteRenderer.Color = new Color(255, 255, 255);
             redPrototype.AddComponent(new RedBeam());
             redPrototype.AddComponent(new Collider());
         }
@@ -59,7 +58,6 @@ namespace PortalGame.CreationalPattern
             spriteRenderer.SetSprite("Beam\\blueportal_beam");
             spriteRenderer.LayerDepth = 0.9f;
             spriteRenderer.Scale = 1f;
-            spriteRenderer.Color = new Color(255, 255, 255);
             bluePrototype.AddComponent(new BlueBeam());
             bluePrototype.AddComponent(new Collider());
         }

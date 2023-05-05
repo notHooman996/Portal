@@ -31,7 +31,6 @@ namespace PortalGame.ComponentPattern
             spriteRenderer.SetSprite($"Tiles\\tile{textureID}");
             spriteRenderer.LayerDepth = 0.1f;
             spriteRenderer.Scale = 2f;
-            spriteRenderer.Color = new Color(255, 255, 255);
 
             GameObject.Transform.Position = new Vector2(Position.X * Width, Position.Y * Height);
             GameObject.Tag = "CollisionTile"; 

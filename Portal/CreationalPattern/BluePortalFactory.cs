@@ -49,7 +49,6 @@ namespace Portal.CreationalPattern
             spriteRenderer.SetSprite("Portal\\blueportal_back");
             spriteRenderer.LayerDepth = 0.9f;
             spriteRenderer.Scale = 1f;
-            spriteRenderer.Color = new Color(255, 255, 255);
             bluePrototype.AddComponent(new BluePortal());
             bluePrototype.AddComponent(new Collider());
         }
