@@ -28,22 +28,19 @@ namespace PortalGame.ComponentPattern.Portals
 
         public void Notify(GameEvent gameEvent)
         {
-            if (IsNewest)
+            if (gameEvent is CollisionEvent)
             {
-                if (gameEvent is CollisionEvent)
-                {
-                    GameObject other = (gameEvent as CollisionEvent).Other;
+                GameObject other = (gameEvent as CollisionEvent).Other;
 
-                    if (GameObject.Tag == BeamType.Red.ToString() && other.Tag == BeamType.Blue.ToString())
-                    {
-                        // remove blue portal 
-                        GameWorld.Instance.Destroy(other);
-                    }
-                    if (GameObject.Tag == BeamType.Blue.ToString() && other.Tag == BeamType.Red.ToString())
-                    {
-                        // remove red portal 
-                        GameWorld.Instance.Destroy(other);
-                    }
+                if (GameObject.Tag == BeamType.Red.ToString() && other.Tag == BeamType.Blue.ToString())
+                {
+                    // remove blue portal 
+                    GameWorld.Instance.Destroy(other);
+                }
+                if (GameObject.Tag == BeamType.Blue.ToString() && other.Tag == BeamType.Red.ToString())
+                {
+                    // remove red portal 
+                    GameWorld.Instance.Destroy(other);
                 }
             }
         }
