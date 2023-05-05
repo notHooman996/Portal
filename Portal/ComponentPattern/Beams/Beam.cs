@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Portal.ComponentPattern;
 using Portal.CreationalPattern;
 using PortalGame.BuilderPattern;
 using PortalGame.CreationalPattern;
@@ -54,9 +55,6 @@ namespace PortalGame.ComponentPattern.Beams
 
                 if(other.Tag == "Platform")
                 {
-                    // get tile 
-                    CollisionTile tile = other.GetComponent<CollisionTile>() as CollisionTile; 
-
                     if (createdPortal)
                     {
                         // when a portal is created in the beams stead, remove the beam 
