@@ -1,11 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Portal.BuilderPattern;
 using PortalGame.BuilderPattern;
 using PortalGame.ComponentPattern;
+using SharpDX.Direct3D9;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using Component = PortalGame.ComponentPattern.Component;
+using SamplerState = Microsoft.Xna.Framework.Graphics.SamplerState;
 
 namespace PortalGame
 {
@@ -37,11 +43,10 @@ namespace PortalGame
 
         private UI userInterface = UI.Instance;
 
-        public Camera Camera { get; private set; }
-
-        public TileMap Map { get; private set; }
-
+        // level map fields 
         private GameObject playerObject;
+        public Camera Camera { get; private set; }
+        public Vector2 LevelSize { get; private set; }
         #endregion
 
         #region properties
@@ -50,8 +55,6 @@ namespace PortalGame
         public List<Collider> Colliders { get; private set; } = new List<Collider>();
 
         public static Vector2 ScreenSize { get; private set; }
-
-        public static MouseState MouseState { get; private set; }
         #endregion
 
         private GameWorld()
@@ -69,18 +72,7 @@ namespace PortalGame
         #region methods 
         protected override void Initialize()
         {
-            // make tile map 
-            string filePath = ".\\..\\..\\..\\TileMapFiles\\TileMapTestLevel.txt";
-            Map = new TileMap(filePath);
-
-            // get all tiles set 
-            for (int y = 0; y < Map.TileCountY; y++)
-            {
-                for (int x = 0; x < Map.TileCountX; x++)
-                {
-                    gameObjects.Add(Map.AddTile(x, y));
-                }
-            }
+            AddPlatforms(".\\..\\..\\..\\TileMapFiles\\TileMapTestLevel.txt"); 
 
             Director playerDirector = new Director(new PlayerBuilder());
             playerObject = playerDirector.Construct();
@@ -100,6 +92,67 @@ namespace PortalGame
             userInterface.Initialize();
 
             base.Initialize();
+        }
+
+        private void AddPlatforms(string filepath)
+        {
+            // make tile map 
+            //string filePath = filepath;
+            //Map = new TileMap(filePath);
+
+            // number of tiles in x and y depends on the size of the file 
+            string firstLine = File.ReadLines(filepath).First();
+            int tileCountX = firstLine.Length - firstLine.Replace(" ", "").Length; // returns the number of intergers in the first line 
+            int tileCountY = File.ReadLines(filepath).Count(); // returns the number of lines in the file 
+
+            // set the sie of the tile used for the platforms 
+            float tilesize = 50; 
+
+            // set maps width and height 
+            LevelSize = new Vector2(tileCountX * tilesize, tileCountY * tilesize - tilesize);
+            //Width = TileCountX * tileSize;
+            //Height = TileCountY * tileSize;
+
+            // read the file, to get tiletypes into dictionary 
+            Dictionary<Vector2, int> tileTypes = new Dictionary<Vector2, int>();
+            string[] lines = File.ReadAllLines(filepath);
+            string[] type;
+            int typeID;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                type = lines[i].Split(" ");
+
+                for (int j = 0; j < type.Length; j++)
+                {
+                    typeID = Int32.Parse(type[j]);
+                    tileTypes.Add(new Vector2(j, i), typeID);
+                }
+            }
+
+
+            // get all tiles set 
+            //for (int y = 0; y < Map.TileCountY; y++)
+            //{
+            //    for (int x = 0; x < Map.TileCountX; x++)
+            //    {
+            //        gameObjects.Add(Map.AddTile(x, y));
+            //    }
+            //}
+
+            for (int i = 0; i <= tileCountX; i++)
+            {
+                for (int j = 0; j < tileCountY; j++)
+                {
+                    if (tileTypes[new Vector2(i, j)] != 0)
+                    {
+                        Director platformDirector = new Director(new PlatformBuilder(i, j, tileTypes[new Vector2(i, j)]));
+                        gameObjects.Add(platformDirector.Construct());
+                    }
+                }
+            }
+
+
+
         }
 
         protected override void LoadContent()
@@ -122,7 +175,7 @@ namespace PortalGame
                 Exit();
 
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            MouseState = Mouse.GetState();
+            //MouseState = Mouse.GetState();
 
             userInterface.Update(gameTime);
 
