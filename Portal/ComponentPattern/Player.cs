@@ -21,10 +21,10 @@ namespace PortalGame.ComponentPattern
         #region fields
         private SpriteRenderer spriteRenderer;
         private float speed;
-        private bool isFalling = true;
 
         private float jumpCooldown = 0;
-        private bool hasJumped = false; 
+        private bool hasJumped = false;
+        private bool canJump = false; 
 
         private Vector2 gravity;
 
@@ -47,10 +47,9 @@ namespace PortalGame.ComponentPattern
             spriteRenderer.SetSprite("Player\\player");
             spriteRenderer.LayerDepth = 0.5f;
             spriteRenderer.Scale = 1f;
-            spriteRenderer.Color = new Color(255, 255, 255);
 
             // set initial position to middle of the map 
-            GameObject.Transform.Position = new Vector2(GameWorld.Instance.Map.Width / 2, GameWorld.Instance.Map.Height / 2);
+            GameObject.Transform.Position = new Vector2(100, 100);
             GameObject.Tag = "Player";
 
             movementKeys.Add(Keys.A, ButtonState.UP);
@@ -67,11 +66,8 @@ namespace PortalGame.ComponentPattern
             //handles input
             InputHandler.Instance.Execute(this);
 
-            if (isFalling)
-            {
-                // make player fall 
-                GameObject.Transform.Translate(gravity * GameWorld.DeltaTime);
-            }
+            // make player fall 
+            GameObject.Transform.Translate(gravity * GameWorld.DeltaTime);
 
             // update jump cooldown 
             jumpCooldown += GameWorld.DeltaTime;
@@ -94,6 +90,8 @@ namespace PortalGame.ComponentPattern
                 }
             }
 
+            canJump = false; 
+
             // make player turn forward 
             //if (movementKeys[Keys.A] == ButtonState.UP && movementKeys[Keys.D] == ButtonState.UP)
             //{
@@ -103,7 +101,7 @@ namespace PortalGame.ComponentPattern
 
         public void Jump()
         {
-            if (!isFalling && jumpCooldown > 0.5f)
+            if (canJump && jumpCooldown > 0.5f)
             {
                 hasJumped = true; 
 
@@ -150,12 +148,6 @@ namespace PortalGame.ComponentPattern
             {
                 GameObject other = (gameEvent as CollisionEvent).Other;
 
-                if (other.Tag == "Tile")
-                {
-                    //Debug.WriteLine("tile");
-                    isFalling = true;
-                }
-
                 // make sure both portals exists 
                 RedPortal redPortal = (RedPortal)GameWorld.Instance.FindObjectOfType<RedPortal>();
                 BluePortal bluePortal = (BluePortal)GameWorld.Instance.FindObjectOfType<BluePortal>();
@@ -186,20 +178,24 @@ namespace PortalGame.ComponentPattern
             {
                 GameObject other = (gameEvent as TopCollisionEvent).Other;
 
-                if (other.Tag == "CollisionTile")
+                if (other.Tag == "Platform")
                 {
                     //Debug.WriteLine("top");
-                    isFalling = false;
+                    //isFalling = false;
+
+                    canJump = true; 
+
+                    SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
                     GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
-                                                                other.Transform.Position.Y - spriteRenderer.Origin.Y); 
+                                                                other.Transform.Position.Y - (otherSpriteRenderer.Origin.Y + spriteRenderer.Origin.Y));
                 }
             }
             if (gameEvent is BottomCollisionEvent)
             {
                 GameObject other = (gameEvent as BottomCollisionEvent).Other;
 
-                if (other.Tag == "CollisionTile")
+                if (other.Tag == "Platform")
                 {
                     //Debug.WriteLine("bottom");
 
@@ -208,35 +204,38 @@ namespace PortalGame.ComponentPattern
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
                     GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
-                                                                other.Transform.Position.Y + spriteRenderer.Origin.Y + (otherSpriteRenderer.Sprite.Height * otherSpriteRenderer.Scale));
-                }
-            }
-            if (gameEvent is RightCollisionEvent)
-            {
-                GameObject other = (gameEvent as RightCollisionEvent).Other;
-
-                if (other.Tag == "CollisionTile")
-                {
-                    //Debug.WriteLine("right");
-
-                    SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
-
-                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X + spriteRenderer.Origin.X + (otherSpriteRenderer.Sprite.Width * otherSpriteRenderer.Scale),
-                                                                GameObject.Transform.Position.Y);
+                                                                other.Transform.Position.Y + (otherSpriteRenderer.Origin.Y + spriteRenderer.Origin.Y));
                 }
             }
             if (gameEvent is LeftCollisionEvent)
             {
                 GameObject other = (gameEvent as LeftCollisionEvent).Other;
 
-                if (other.Tag == "CollisionTile")
+                if (other.Tag == "Platform")
                 {
                     //Debug.WriteLine("left");
 
-                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X - spriteRenderer.Origin.X,
+                    SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
+
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X - (otherSpriteRenderer.Origin.X + spriteRenderer.Origin.X),
                                                                 GameObject.Transform.Position.Y);
                 }
             }
+            if (gameEvent is RightCollisionEvent)
+            {
+                GameObject other = (gameEvent as RightCollisionEvent).Other;
+
+                if (other.Tag == "Platform")
+                {
+                    //Debug.WriteLine("right");
+
+                    SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
+
+                    GameObject.Transform.Position = new Vector2(other.Transform.Position.X + (otherSpriteRenderer.Origin.X + spriteRenderer.Origin.X),
+                                                                GameObject.Transform.Position.Y);
+                }
+            }
+            
 
 
             if (gameEvent is ButtonEvent)
