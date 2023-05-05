@@ -43,8 +43,8 @@ namespace PortalGame.ComponentPattern
                     (
                         (int)(GameObject.Transform.Position.X - spriteRenderer.Origin.X),
                         (int)(GameObject.Transform.Position.Y - spriteRenderer.Origin.Y),
-                        (int)(spriteRenderer.Sprite.Width * spriteRenderer.Scale),
-                        (int)(spriteRenderer.Sprite.Height * spriteRenderer.Scale)
+                        (int)(spriteRenderer.Sprite.Width),
+                        (int)(spriteRenderer.Sprite.Height)
                     );
             }
         }
@@ -103,27 +103,25 @@ namespace PortalGame.ComponentPattern
         /// </summary>
         private void CheckCollision()
         {
-            RectangleHelper rectangleHelper = new RectangleHelper(); 
-
             foreach (Collider other in GameWorld.Instance.Colliders)
             {
                 if (other != this && other.CollisionBox.Intersects(CollisionBox))
                 {
                     CollisionEvent.Notify(other.GameObject);
 
-                    if (rectangleHelper.TouchTopOf(CollisionBox, other.CollisionBox))
+                    if (TouchTopOf(CollisionBox, other.CollisionBox))
                     {
                         TopCollisionEvent.Notify(other.GameObject); 
                     }
-                    if (rectangleHelper.TouchBottomOf(CollisionBox, other.CollisionBox))
+                    if (TouchBottomOf(CollisionBox, other.CollisionBox))
                     {
                         BottomCollisionEvent.Notify(other.GameObject);
                     }
-                    if (rectangleHelper.TouchRightOf(CollisionBox, other.CollisionBox))
+                    if (TouchRightOf(CollisionBox, other.CollisionBox))
                     {
                         RightCollisionEvent.Notify(other.GameObject);
                     }
-                    if (rectangleHelper.TouchLeftOf(CollisionBox, other.CollisionBox))
+                    if (TouchLeftOf(CollisionBox, other.CollisionBox))
                     {
                         LeftCollisionEvent.Notify(other.GameObject);
                     }
@@ -148,6 +146,38 @@ namespace PortalGame.ComponentPattern
                 //    //}
                 //}
             }
+        }
+
+        private bool TouchTopOf(Rectangle r1, Rectangle r2)
+        {
+            return (r1.Bottom >= r2.Top - 5 &&
+                    r1.Bottom <= r2.Top + 5 &&
+                    r1.Right >= r2.Left &&
+                    r1.Left <= r2.Right);
+        }
+
+        private bool TouchBottomOf(Rectangle r1, Rectangle r2)
+        {
+            return (r1.Top <= r2.Bottom + 10 &&
+                    r1.Top >= r2.Bottom - 10 &&
+                    r1.Right >= r2.Left + 7 &&
+                    r1.Left <= r2.Right - 7);
+        }
+
+        private bool TouchLeftOf(Rectangle r1, Rectangle r2)
+        {
+            return (r1.Right <= r2.Left + 5 &&
+                    r1.Right >= r2.Left - 5 &&
+                    r1.Top <= r2.Bottom - 5 &&
+                    r1.Bottom >= r2.Top + 5);
+        }
+
+        private bool TouchRightOf(Rectangle r1, Rectangle r2)
+        {
+            return (r1.Left >= r2.Right - 5 &&
+                    r1.Left <= r2.Right + 5 &&
+                    r1.Top <= r2.Bottom - 5 &&
+                    r1.Bottom >= r2.Top + 5);
         }
 
         /// <summary>
