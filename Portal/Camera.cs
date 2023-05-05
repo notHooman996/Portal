@@ -23,8 +23,10 @@ namespace PortalGame
 
         public void Update(Vector2 position)
         {
-            int xOffset = GameWorld.Instance.Map.Width;
-            int yOffset = GameWorld.Instance.Map.Height;
+            //int xOffset = GameWorld.Instance.Map.Width;
+            float xOffset = GameWorld.Instance.LevelSize.X;
+            //int yOffset = GameWorld.Instance.Map.Height;
+            float yOffset = GameWorld.Instance.LevelSize.Y;
 
             if (position.X < viewport.Width / 2)
             {
