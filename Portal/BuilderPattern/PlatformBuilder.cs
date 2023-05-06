@@ -15,12 +15,12 @@ namespace Portal.BuilderPattern
     {
         private GameObject gameObject;
         private Vector2 position;
-        private int Id; 
+        private int Id;
 
-        public PlatformBuilder(int x, int y, int id)
+        public PlatformBuilder(int x, int y, int tileSize, int id)
         {
-            position = new Vector2(x, y);
-            Id = id; 
+            position = new Vector2(x * tileSize, y * tileSize);
+            Id = id;
         }
 
         /// <summary>

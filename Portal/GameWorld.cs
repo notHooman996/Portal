@@ -74,9 +74,7 @@ namespace PortalGame
         {
             AddPlatforms(".\\..\\..\\..\\TileMapFiles\\TileMapTestLevel.txt"); 
 
-            Director playerDirector = new Director(new PlayerBuilder());
-            playerObject = playerDirector.Construct();
-            gameObjects.Add(playerObject);
+            
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -106,7 +104,7 @@ namespace PortalGame
             int tileCountY = File.ReadLines(filepath).Count(); // returns the number of lines in the file 
 
             // set the sie of the tile used for the platforms 
-            float tilesize = 50; 
+            int tilesize = 50; 
 
             // set maps width and height 
             LevelSize = new Vector2(tileCountX * tilesize, tileCountY * tilesize - tilesize);
@@ -114,18 +112,18 @@ namespace PortalGame
             //Height = TileCountY * tileSize;
 
             // read the file, to get tiletypes into dictionary 
-            Dictionary<Vector2, int> tileTypes = new Dictionary<Vector2, int>();
+            Dictionary<Vector2, string> tileIds = new Dictionary<Vector2, string>();
             string[] lines = File.ReadAllLines(filepath);
             string[] type;
-            int typeID;
+            string typeID;
             for (int i = 0; i < lines.Length; i++)
             {
                 type = lines[i].Split(" ");
 
                 for (int j = 0; j < type.Length; j++)
                 {
-                    typeID = Int32.Parse(type[j]);
-                    tileTypes.Add(new Vector2(j, i), typeID);
+                    typeID = type[j];
+                    tileIds.Add(new Vector2(j, i), typeID);
                 }
             }
 
@@ -143,9 +141,24 @@ namespace PortalGame
             {
                 for (int j = 0; j < tileCountY; j++)
                 {
-                    if (tileTypes[new Vector2(i, j)] != 0)
+                    // s marks the starting position of the player 
+                    if(tileIds[new Vector2(i, j)] == "s")
                     {
-                        Director platformDirector = new Director(new PlatformBuilder(i, j, tileTypes[new Vector2(i, j)]));
+                        Director playerDirector = new Director(new PlayerBuilder(i, j, tilesize));
+                        playerObject = playerDirector.Construct();
+                        gameObjects.Add(playerObject);
+                    }
+                    // e marks the end, or the goal, the spot the player needs to get to 
+                    else if(tileIds[new Vector2(i, j)] == "e")
+                    {
+                        Director endDirector = new Director(new EndBuilder(i, j, tilesize));
+                        gameObjects.Add(endDirector.Construct()); 
+                    }
+                    // any tile with id other than 0, is a platform 
+                    else if (tileIds[new Vector2(i, j)] != "0")
+                    {
+                        int platformId = Int32.Parse(tileIds[new Vector2(i, j)]);
+                        Director platformDirector = new Director(new PlatformBuilder(i, j, tilesize, platformId));
                         gameObjects.Add(platformDirector.Construct());
                     }
                 }
