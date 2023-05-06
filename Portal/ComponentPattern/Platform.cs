@@ -27,7 +27,7 @@ namespace Portal.ComponentPattern
             spriteRenderer.LayerDepth = 0.5f;
             spriteRenderer.Scale = 1f; 
 
-            GameObject.Transform.Position = new Vector2(position.X * spriteRenderer.Sprite.Width, position.Y * spriteRenderer.Sprite.Height);
+            GameObject.Transform.Position = new Vector2(position.X, position.Y);
         }
     }
 }
