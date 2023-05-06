@@ -21,6 +21,7 @@ namespace PortalGame.ComponentPattern
         #region fields
         private SpriteRenderer spriteRenderer;
         private float speed;
+        private Vector2 startPosition; 
 
         private float jumpTime;
         private bool isJumping;
@@ -33,6 +34,11 @@ namespace PortalGame.ComponentPattern
         private bool canShoot;
 
         #endregion
+
+        public Player(Vector2 position)
+        {
+            startPosition = position; 
+        }
 
         #region methods
         /// <summary>
@@ -49,7 +55,7 @@ namespace PortalGame.ComponentPattern
             spriteRenderer.Scale = 1f;
 
             // set initial position to middle of the map 
-            GameObject.Transform.Position = new Vector2(100, 100);
+            GameObject.Transform.Position = startPosition;
             GameObject.Tag = "Player";
 
             movementKeys.Add(Keys.A, ButtonState.UP);
@@ -147,6 +153,7 @@ namespace PortalGame.ComponentPattern
             {
                 GameObject other = (gameEvent as CollisionEvent).Other;
 
+                // collision with portals 
                 // make sure both portals exists 
                 RedPortal redPortal = (RedPortal)GameWorld.Instance.FindObjectOfType<RedPortal>();
                 BluePortal bluePortal = (BluePortal)GameWorld.Instance.FindObjectOfType<BluePortal>();
@@ -169,6 +176,12 @@ namespace PortalGame.ComponentPattern
                         // set player position to red portal, plus offset 
                         GameObject.Transform.Position = redPortalObject.Transform.Position + (redPortal.PlayerDisplacement * spriteRenderer.Sprite.Width);
                     }
+                }
+
+                // collision with end 
+                if(other.Tag == "End")
+                {
+                    Debug.WriteLine("end reached");
                 }
             }
 

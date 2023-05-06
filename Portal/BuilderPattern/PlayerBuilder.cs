@@ -1,4 +1,5 @@
-﻿using PortalGame.ComponentPattern;
+﻿using Microsoft.Xna.Framework;
+using PortalGame.ComponentPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,12 @@ namespace PortalGame.BuilderPattern
     public class PlayerBuilder : IBuilder
     {
         private GameObject gameObject;
+        private Vector2 position; 
+
+        public PlayerBuilder(int x, int y, int tileSize)
+        {
+            position = new Vector2(x * tileSize, y * tileSize); 
+        }
 
         /// <summary>
         /// creates a new gameobject
@@ -27,7 +34,7 @@ namespace PortalGame.BuilderPattern
         private void BuildComponents()
         {
             // add components 
-            Player player = (Player)gameObject.AddComponent(new Player());
+            Player player = (Player)gameObject.AddComponent(new Player(position));
             gameObject.AddComponent(new SpriteRenderer());
             Collider collider = (Collider)gameObject.AddComponent(new Collider());
             collider.CollisionEvent.Attach(player);
