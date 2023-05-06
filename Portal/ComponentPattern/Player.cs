@@ -22,9 +22,9 @@ namespace PortalGame.ComponentPattern
         private SpriteRenderer spriteRenderer;
         private float speed;
 
-        private float jumpCooldown = 0;
-        private bool hasJumped = false;
-        private bool canJump = false; 
+        private float jumpTime;
+        private bool isJumping;
+        private bool canJump; 
 
         private Vector2 gravity;
 
@@ -69,28 +69,27 @@ namespace PortalGame.ComponentPattern
             // make player fall 
             GameObject.Transform.Translate(gravity * GameWorld.DeltaTime);
 
-            // update jump cooldown 
-            jumpCooldown += GameWorld.DeltaTime;
+            
 
-            if (hasJumped)
+            if (isJumping)
             {
-                if(jumpCooldown < 0.1f)
+                // update jump time 
+                jumpTime += GameWorld.DeltaTime;
+                if (jumpTime < 0.1f)
                 {
                     Vector2 velocity = new Vector2(0, -5f) * speed;
                     GameObject.Transform.Translate(velocity * GameWorld.DeltaTime);
                 }
-                else if (jumpCooldown < 0.3f)
+                else if (jumpTime < 0.3f)
                 {
                     Vector2 velocity = new Vector2(0, -1.5f) * speed;
                     GameObject.Transform.Translate(velocity * GameWorld.DeltaTime);
                 }
                 else
                 {
-                    hasJumped = false;
+                    isJumping = false;
                 }
             }
-
-            canJump = false; 
 
             // make player turn forward 
             //if (movementKeys[Keys.A] == ButtonState.UP && movementKeys[Keys.D] == ButtonState.UP)
@@ -101,11 +100,11 @@ namespace PortalGame.ComponentPattern
 
         public void Jump()
         {
-            if (canJump && jumpCooldown > 0.5f)
+            if (canJump)
             {
-                hasJumped = true; 
-
-                jumpCooldown = 0; 
+                isJumping = true; 
+                jumpTime = 0;
+                canJump = false; 
             }
         }
 
@@ -180,9 +179,7 @@ namespace PortalGame.ComponentPattern
 
                 if (other.Tag == "Platform")
                 {
-                    //Debug.WriteLine("top");
-                    //isFalling = false;
-
+                    // player can jump when touching top of platform 
                     canJump = true; 
 
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
@@ -197,9 +194,8 @@ namespace PortalGame.ComponentPattern
 
                 if (other.Tag == "Platform")
                 {
-                    //Debug.WriteLine("bottom");
-
-                    jumpCooldown = 1; 
+                    // make sure player can not jump through platform 
+                    isJumping = false; 
 
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
@@ -213,8 +209,6 @@ namespace PortalGame.ComponentPattern
 
                 if (other.Tag == "Platform")
                 {
-                    //Debug.WriteLine("left");
-
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
                     GameObject.Transform.Position = new Vector2(other.Transform.Position.X - (otherSpriteRenderer.Origin.X + spriteRenderer.Origin.X),
@@ -227,8 +221,6 @@ namespace PortalGame.ComponentPattern
 
                 if (other.Tag == "Platform")
                 {
-                    //Debug.WriteLine("right");
-
                     SpriteRenderer otherSpriteRenderer = other.GetComponent<SpriteRenderer>() as SpriteRenderer;
 
                     GameObject.Transform.Position = new Vector2(other.Transform.Position.X + (otherSpriteRenderer.Origin.X + spriteRenderer.Origin.X),
