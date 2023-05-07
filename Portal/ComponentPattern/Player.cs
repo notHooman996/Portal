@@ -50,7 +50,7 @@ namespace PortalGame.ComponentPattern
             gravity = new Vector2(0, 0.9f) * speed;
 
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
-            spriteRenderer.SetSprite("Player\\player");
+            spriteRenderer.SetSprite("Player\\Idle\\idle");
             spriteRenderer.LayerDepth = 0.5f;
             spriteRenderer.Scale = 1f;
 
