@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Portal.ComponentPattern;
 using PortalGame.CommandPattern;
 using PortalGame.ComponentPattern.Beams;
 using PortalGame.ComponentPattern.Portals;
@@ -12,7 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ButtonState = PortalGame.ObserverPattern.ButtonState;
+using KeyButtonState = PortalGame.ObserverPattern.KeyButtonState;
 
 namespace PortalGame.ComponentPattern
 {
@@ -21,7 +22,9 @@ namespace PortalGame.ComponentPattern
         #region fields
         private SpriteRenderer spriteRenderer;
         private float speed;
-        private Vector2 startPosition; 
+        private Vector2 startPosition;
+
+        private bool canShoot;
 
         private float jumpTime;
         private bool isJumping;
@@ -29,10 +32,8 @@ namespace PortalGame.ComponentPattern
 
         private Vector2 gravity;
 
-        private Dictionary<Keys, ButtonState> movementKeys = new Dictionary<Keys, ButtonState>();
-
-        private bool canShoot;
-
+        private Dictionary<Keys, KeyButtonState> movementKeys = new Dictionary<Keys, KeyButtonState>();
+        private Animator animator; 
         #endregion
 
         public Player(Vector2 position)
@@ -54,13 +55,15 @@ namespace PortalGame.ComponentPattern
             spriteRenderer.LayerDepth = 0.5f;
             spriteRenderer.Scale = 1f;
 
+            animator = GameObject.GetComponent<Animator>() as Animator; 
+
             // set initial position to middle of the map 
             GameObject.Transform.Position = startPosition;
             GameObject.Tag = "Player";
 
-            movementKeys.Add(Keys.A, ButtonState.UP);
-            movementKeys.Add(Keys.D, ButtonState.UP);
-            movementKeys.Add(Keys.W, ButtonState.UP); 
+            movementKeys.Add(Keys.A, KeyButtonState.UP);
+            movementKeys.Add(Keys.D, KeyButtonState.UP);
+            movementKeys.Add(Keys.W, KeyButtonState.UP); 
         }
 
         /// <summary>
@@ -98,10 +101,10 @@ namespace PortalGame.ComponentPattern
             }
 
             // make player turn forward 
-            //if (movementKeys[Keys.A] == ButtonState.UP && movementKeys[Keys.D] == ButtonState.UP)
-            //{
-            //    animator.PlayAnimation("Forward");
-            //}
+            if (movementKeys[Keys.A] == KeyButtonState.UP && movementKeys[Keys.D] == KeyButtonState.UP)
+            {
+                animator.PlayAnimation("Idle");
+            }
         }
 
         public void Jump()
@@ -145,6 +148,16 @@ namespace PortalGame.ComponentPattern
 
             velocity *= speed;
             GameObject.Transform.Translate(velocity * GameWorld.DeltaTime);
+
+            // animation 
+            if(velocity.X > 0)
+            {
+                animator.PlayAnimation("WalkRight");
+            }
+            else if(velocity.X < 0)
+            {
+                animator.PlayAnimation("WalkLeft");
+            }
         }
 
         public void Notify(GameEvent gameEvent)
