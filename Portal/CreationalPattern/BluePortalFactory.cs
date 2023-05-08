@@ -55,7 +55,8 @@ namespace Portal.CreationalPattern
             spriteRenderer.Scale = 1f;
             bluePrototype.AddComponent(new BluePortal());
             bluePrototype.AddComponent(new Collider());
-            animator = bluePrototype.AddComponent(new Animator()) as Animator; 
+            animator = bluePrototype.AddComponent(new Animator()) as Animator;
+            animator.AddAnimation(BuildAnimation("Default", new string[] { "Portal\\Green\\green1" }));
         }
 
         private void CreateTopPrototype()
@@ -154,7 +155,8 @@ namespace Portal.CreationalPattern
                     bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
 
-                    bluePortal.PlayerDisplacement = new Vector2(0, -1); 
+                    bluePortal.PlayerDisplacement = new Vector2(0, -1);
+                    bluePortal.AnimationName = "Top";
                     break;
                 case Side.Bottom:
                     gameObject = (GameObject)bottomPrototype.Clone();
@@ -164,6 +166,7 @@ namespace Portal.CreationalPattern
                     collider.CollisionEvent.Attach(bluePortal);
 
                     bluePortal.PlayerDisplacement = new Vector2(0, 1);
+                    bluePortal.AnimationName = "Bottom";
                     break;
                 case Side.Left:
                     gameObject = (GameObject)leftPrototype.Clone();
@@ -173,6 +176,7 @@ namespace Portal.CreationalPattern
                     collider.CollisionEvent.Attach(bluePortal);
 
                     bluePortal.PlayerDisplacement = new Vector2(-1, 0);
+                    bluePortal.AnimationName = "Left";
                     break;
                 case Side.Right:
                     gameObject = (GameObject)rightPrototype.Clone();
@@ -182,6 +186,7 @@ namespace Portal.CreationalPattern
                     collider.CollisionEvent.Attach(bluePortal);
 
                     bluePortal.PlayerDisplacement = new Vector2(1, 0);
+                    bluePortal.AnimationName = "Right";
                     break;
             }
 

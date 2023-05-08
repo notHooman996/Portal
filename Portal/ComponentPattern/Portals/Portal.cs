@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Portal.ComponentPattern;
 using PortalGame.BuilderPattern;
 using PortalGame.CreationalPattern;
 using PortalGame.ObserverPattern;
@@ -12,13 +13,15 @@ namespace PortalGame.ComponentPattern.Portals
 {
     public class Portal : Component, IGameListener
     {
-        public bool IsNewest { get; set; }
+        private Animator animator;
+        public string AnimationName { get; set; }
 
         public Vector2 PlayerDisplacement { get; set; }
 
-        public override void Awake()
+        public override void Start()
         {
-            base.Awake();
+            animator = GameObject.GetComponent<Animator>() as Animator;
+            animator.PlayAnimation(AnimationName);
         }
 
         public override void Update(GameTime gameTime)
