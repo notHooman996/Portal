@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Portal.ComponentPattern;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Portal.CreationalPattern
 {
@@ -26,6 +28,8 @@ namespace Portal.CreationalPattern
                 return instance;
             }
         }
+
+        private Animator animator; 
 
         private GameObject bluePrototype;
         private GameObject topPrototype;
@@ -51,26 +55,79 @@ namespace Portal.CreationalPattern
             spriteRenderer.Scale = 1f;
             bluePrototype.AddComponent(new BluePortal());
             bluePrototype.AddComponent(new Collider());
+            animator = bluePrototype.AddComponent(new Animator()) as Animator; 
         }
 
         private void CreateTopPrototype()
         {
             topPrototype = (GameObject)bluePrototype.Clone();
+
+            // add animation
+            string[] sprites = new string[8];
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                sprites[i] = $"Portal\\Green\\green{i + 1}";
+            }
+            animator.AddAnimation(BuildAnimation("Top", sprites));
         }
 
         private void CreateBottomPrototype()
         {
             bottomPrototype = (GameObject)bluePrototype.Clone();
+
+            // add animation
+            string[] sprites = new string[8];
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                sprites[i] = $"Portal\\Green\\green{i + 1}";
+            }
+            animator.AddAnimation(BuildAnimation("Bottom", sprites));
         }
 
         private void CreateLeftPrototype()
         {
             leftPrototype = (GameObject)bluePrototype.Clone();
+
+            // add animation
+            string[] sprites = new string[8];
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                sprites[i] = $"Portal\\Green\\green{i+1}";
+            }
+            animator.AddAnimation(BuildAnimation("Left", sprites));
         }
 
         private void CreateRightPrototype()
         {
             rightPrototype = (GameObject)bluePrototype.Clone();
+
+            // add animation
+            string[] sprites = new string[8];
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                sprites[i] = $"Portal\\Green\\green{i + 1}";
+            }
+            animator.AddAnimation(BuildAnimation("Right", sprites));
+        }
+
+        /// <summary>
+        /// Method that builds an animation using an array of sprite names
+        /// </summary>
+        /// <param name="animationName">A string name for the animation, used to tell animations apart</param>
+        /// <param name="spriteNames">A string array for the sprites used in the animation</param>
+        /// <returns></returns>
+        private Animation BuildAnimation(string animationName, string[] spriteNames)
+        {
+            Texture2D[] sprites = new Texture2D[spriteNames.Length];
+
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                sprites[i] = GameWorld.Instance.Content.Load<Texture2D>(spriteNames[i]);
+            }
+
+            Animation animation = new Animation(7.5f, animationName, sprites);
+
+            return animation;
         }
 
         public override GameObject Create(Enum type)
