@@ -104,7 +104,7 @@ namespace PortalGame
             int tileCountY = File.ReadLines(filepath).Count(); // returns the number of lines in the file 
 
             // set the sie of the tile used for the platforms 
-            int tilesize = 50; 
+            int tilesize = 64; 
 
             // set maps width and height 
             LevelSize = new Vector2(tileCountX * tilesize, tileCountY * tilesize - tilesize);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PortalGame.ObserverPattern
 {
-    public enum ButtonState
+    public enum KeyButtonState
     {
         UP,
         DOWN
@@ -16,9 +16,9 @@ namespace PortalGame.ObserverPattern
     public class ButtonEvent : GameEvent
     {
         public Keys Key { get; private set; }
-        public ButtonState State { get; private set; }
+        public KeyButtonState State { get; private set; }
 
-        public void Notify(Keys key, ButtonState state)
+        public void Notify(Keys key, KeyButtonState state)
         {
             Key = key;
             State = state;

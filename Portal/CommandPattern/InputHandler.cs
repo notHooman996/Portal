@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using PortalGame.ComponentPattern;
 using PortalGame.CreationalPattern;
+using PortalGame.ObserverPattern;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -34,6 +35,7 @@ namespace PortalGame.CommandPattern
 
         #region fields
         private Dictionary<KeyInfo, ICommand> keybinds = new Dictionary<KeyInfo, ICommand>();
+        private ButtonEvent buttonEvent = new ButtonEvent();
 
         float leftClickCooldown = 5;
         float rightClickCooldown = 5;
@@ -47,6 +49,9 @@ namespace PortalGame.CommandPattern
         /// </summary>
         private InputHandler()
         {
+            Player player = GameWorld.Instance.FindObjectOfType<Player>() as Player;
+            buttonEvent.Attach(player); 
+
             keybinds.Add(new KeyInfo(Keys.A), new MoveCommand(new Vector2(-1, 0)));
             keybinds.Add(new KeyInfo(Keys.D), new MoveCommand(new Vector2(1, 0)));
             keybinds.Add(new KeyInfo(Keys.W), new JumpCommand());
@@ -65,10 +70,12 @@ namespace PortalGame.CommandPattern
                 if (keyState.IsKeyDown(keyInfo.Key))
                 {
                     keybinds[keyInfo].Execute(player);
+                    buttonEvent.Notify(keyInfo.Key, KeyButtonState.DOWN);
                     keyInfo.IsDown = true;
                 }
                 if (!keyState.IsKeyDown(keyInfo.Key) && keyInfo.IsDown)
                 {
+                    buttonEvent.Notify(keyInfo.Key, KeyButtonState.UP);
                     keyInfo.IsDown = false;
                 }
             }
