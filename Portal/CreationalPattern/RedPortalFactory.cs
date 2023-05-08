@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Portal.ComponentPattern;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
 
 namespace Portal.CreationalPattern
 {
@@ -64,6 +65,7 @@ namespace Portal.CreationalPattern
             redPrototype.AddComponent(new RedPortal());
             redPrototype.AddComponent(new Collider());
             animator = redPrototype.AddComponent(new Animator()) as Animator;
+            animator.AddAnimation(BuildAnimation("Default", new string[] { "Portal\\Purple\\purple1" }));
         }
 
         private void CreateTopPrototype()
@@ -163,6 +165,7 @@ namespace Portal.CreationalPattern
                     collider.CollisionEvent.Attach(redPortal);
 
                     redPortal.PlayerDisplacement = new Vector2(0, -1);
+                    redPortal.AnimationName = "Top"; 
                     break;
                 case Side.Bottom:
                     gameObject = (GameObject)bottomPrototype.Clone();
@@ -172,6 +175,7 @@ namespace Portal.CreationalPattern
                     collider.CollisionEvent.Attach(redPortal);
 
                     redPortal.PlayerDisplacement = new Vector2(0, 1);
+                    redPortal.AnimationName = "Bottom";
                     break;
                 case Side.Left:
                     gameObject = (GameObject)leftPrototype.Clone();
@@ -181,6 +185,7 @@ namespace Portal.CreationalPattern
                     collider.CollisionEvent.Attach(redPortal);
 
                     redPortal.PlayerDisplacement = new Vector2(-1, 0);
+                    redPortal.AnimationName = "Left";
                     break;
                 case Side.Right:
                     gameObject = (GameObject)rightPrototype.Clone();
@@ -190,6 +195,7 @@ namespace Portal.CreationalPattern
                     collider.CollisionEvent.Attach(redPortal);
 
                     redPortal.PlayerDisplacement = new Vector2(1, 0);
+                    redPortal.AnimationName = "Right";
                     break;
             }
 
