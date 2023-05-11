@@ -13,6 +13,8 @@ namespace PortalGame.ComponentPattern.Portals
 {
     public class Portal : Component, IGameListener
     {
+        private SpriteRenderer spriteRenderer;
+        private Collider collider; 
         private Animator animator;
         public string AnimationName { get; set; }
 
@@ -20,13 +22,28 @@ namespace PortalGame.ComponentPattern.Portals
 
         public override void Start()
         {
+            spriteRenderer = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer; 
             animator = GameObject.GetComponent<Animator>() as Animator;
             animator.PlayAnimation(AnimationName);
+
+            collider = GameObject.GetComponent<Collider>() as Collider;
+            // set collisionbox 
+            SetCollisionBox(); 
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+        }
+
+        private void SetCollisionBox()
+        {
+            collider.CollisionBox = new Rectangle(
+                                                  (int)(GameObject.Transform.Position.X - spriteRenderer.Sprite.Width / 2),
+                                                  (int)(GameObject.Transform.Position.Y - spriteRenderer.Sprite.Height / 2),
+                                                  (int)(spriteRenderer.Sprite.Width),
+                                                  (int)(spriteRenderer.Sprite.Height)
+                                                  );
         }
 
         public void Notify(GameEvent gameEvent)

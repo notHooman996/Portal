@@ -16,6 +16,9 @@ namespace PortalGame.ComponentPattern.Beams
 {
     public class Beam : Component, IGameListener
     {
+        private SpriteRenderer spriteRenderer;
+        private Collider collider;
+
         private int speed; 
 
         public Vector2 Direction { get; set; }
@@ -26,7 +29,13 @@ namespace PortalGame.ComponentPattern.Beams
 
         public override void Awake()
         {
-            speed = 250; 
+            spriteRenderer = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
+
+            speed = 250;
+
+            collider = GameObject.GetComponent<Collider>() as Collider;
+            // set collisionbox 
+            SetCollisionBox();
 
             base.Awake();
         }
@@ -44,7 +53,19 @@ namespace PortalGame.ComponentPattern.Beams
 
             GameObject.Transform.Translate(d * GameWorld.DeltaTime);
 
+            SetCollisionBox();
+
             base.Update(gameTime);
+        }
+
+        private void SetCollisionBox()
+        {
+            collider.CollisionBox = new Rectangle(
+                                                  (int)(GameObject.Transform.Position.X - spriteRenderer.Sprite.Width / 2),
+                                                  (int)(GameObject.Transform.Position.Y - spriteRenderer.Sprite.Height / 2),
+                                                  (int)(spriteRenderer.Sprite.Width),
+                                                  (int)(spriteRenderer.Sprite.Height)
+                                                  );
         }
 
         public void Notify(GameEvent gameEvent)

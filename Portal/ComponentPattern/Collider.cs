@@ -35,19 +35,21 @@ namespace PortalGame.ComponentPattern
         /// <summary>
         /// used to return a rectangle based on the objects position and its sprite
         /// </summary>
-        public Rectangle CollisionBox
-        {
-            get
-            {
-                return new Rectangle
-                    (
-                        (int)(GameObject.Transform.Position.X - spriteRenderer.Origin.X),
-                        (int)(GameObject.Transform.Position.Y - spriteRenderer.Origin.Y),
-                        (int)(spriteRenderer.Sprite.Width),
-                        (int)(spriteRenderer.Sprite.Height)
-                    );
-            }
-        }
+        /// 
+        public Rectangle CollisionBox { get; set; }
+        //public Rectangle CollisionBox
+        //{
+        //    get
+        //    {
+        //        return new Rectangle
+        //            (
+        //                (int)(GameObject.Transform.Position.X - spriteRenderer.Origin.X),
+        //                (int)(GameObject.Transform.Position.Y - spriteRenderer.Origin.Y),
+        //                (int)(spriteRenderer.Sprite.Width),
+        //                (int)(spriteRenderer.Sprite.Height)
+        //            );
+        //    }
+        //}
         #endregion
 
         #region methods
