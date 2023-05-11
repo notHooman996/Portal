@@ -21,6 +21,7 @@ namespace PortalGame.ComponentPattern
     {
         #region fields
         private SpriteRenderer spriteRenderer;
+        private Collider collider; 
         private float speed;
         private Vector2 startPosition;
 
@@ -61,6 +62,11 @@ namespace PortalGame.ComponentPattern
             GameObject.Transform.Position = startPosition;
             GameObject.Tag = "Player";
 
+            collider = GameObject.GetComponent<Collider>() as Collider;
+
+            // set collisionbox 
+            SetCollisionBox(); 
+
             movementKeys.Add(Keys.A, KeyButtonState.UP);
             movementKeys.Add(Keys.D, KeyButtonState.UP);
             movementKeys.Add(Keys.W, KeyButtonState.UP); 
@@ -77,8 +83,6 @@ namespace PortalGame.ComponentPattern
 
             // make player fall 
             GameObject.Transform.Translate(gravity * GameWorld.DeltaTime);
-
-            
 
             if (isJumping)
             {
@@ -105,6 +109,23 @@ namespace PortalGame.ComponentPattern
             {
                 animator.PlayAnimation("Idle");
             }
+
+            // update collisionbox 
+            if(collider.CollisionBox.X != GameObject.Transform.Position.X + spriteRenderer.Sprite.Width / 2 ||
+               collider.CollisionBox.Y != GameObject.Transform.Position.Y + spriteRenderer.Sprite.Height / 2)
+            {
+                SetCollisionBox();
+            }
+        }
+
+        private void SetCollisionBox()
+        {
+            collider.CollisionBox = new Rectangle(
+                                                  (int)(GameObject.Transform.Position.X - spriteRenderer.Sprite.Width / 2),
+                                                  (int)(GameObject.Transform.Position.Y - spriteRenderer.Sprite.Height / 2),
+                                                  (int)(spriteRenderer.Sprite.Width),
+                                                  (int)(spriteRenderer.Sprite.Height)
+                                                  );
         }
 
         public void Jump()
@@ -179,7 +200,9 @@ namespace PortalGame.ComponentPattern
                         GameObject bluePortalObject = GameWorld.Instance.GetObjectOfType<BluePortal>();
 
                         // set players position to blue portal, plus offset 
-                        GameObject.Transform.Position = bluePortalObject.Transform.Position + (bluePortal.PlayerDisplacement * spriteRenderer.Sprite.Width); 
+                        GameObject.Transform.Position = bluePortalObject.Transform.Position + (bluePortal.PlayerDisplacement * spriteRenderer.Sprite.Width *1.5f);
+                        
+                        SetCollisionBox();
                     }
                     if (other.Tag == BeamType.Blue.ToString())
                     {
@@ -187,7 +210,9 @@ namespace PortalGame.ComponentPattern
                         GameObject redPortalObject = GameWorld.Instance.GetObjectOfType<RedPortal>();
 
                         // set player position to red portal, plus offset 
-                        GameObject.Transform.Position = redPortalObject.Transform.Position + (redPortal.PlayerDisplacement * spriteRenderer.Sprite.Width);
+                        GameObject.Transform.Position = redPortalObject.Transform.Position + (redPortal.PlayerDisplacement * spriteRenderer.Sprite.Width *1.5f);
+                        
+                        SetCollisionBox();
                     }
                 }
 
@@ -212,6 +237,8 @@ namespace PortalGame.ComponentPattern
 
                     GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
                                                                 other.Transform.Position.Y - (otherSpriteRenderer.Origin.Y + spriteRenderer.Origin.Y));
+                    
+                    SetCollisionBox();
                 }
             }
             if (gameEvent is BottomCollisionEvent)
@@ -227,6 +254,8 @@ namespace PortalGame.ComponentPattern
 
                     GameObject.Transform.Position = new Vector2(GameObject.Transform.Position.X,
                                                                 other.Transform.Position.Y + (otherSpriteRenderer.Origin.Y + spriteRenderer.Origin.Y));
+                    
+                    SetCollisionBox();
                 }
             }
             if (gameEvent is LeftCollisionEvent)
@@ -239,6 +268,8 @@ namespace PortalGame.ComponentPattern
 
                     GameObject.Transform.Position = new Vector2(other.Transform.Position.X - (otherSpriteRenderer.Origin.X + spriteRenderer.Origin.X),
                                                                 GameObject.Transform.Position.Y);
+                    
+                    SetCollisionBox();
                 }
             }
             if (gameEvent is RightCollisionEvent)
@@ -251,6 +282,8 @@ namespace PortalGame.ComponentPattern
 
                     GameObject.Transform.Position = new Vector2(other.Transform.Position.X + (otherSpriteRenderer.Origin.X + spriteRenderer.Origin.X),
                                                                 GameObject.Transform.Position.Y);
+                    
+                    SetCollisionBox();
                 }
             }
             
