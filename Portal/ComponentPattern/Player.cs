@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Portal.ComponentPattern;
+using Portal.CreationalPattern;
 using PortalGame.CommandPattern;
 using PortalGame.ComponentPattern.Beams;
 using PortalGame.ComponentPattern.Portals;
@@ -35,6 +36,8 @@ namespace PortalGame.ComponentPattern
 
         private Dictionary<Keys, KeyButtonState> movementKeys = new Dictionary<Keys, KeyButtonState>();
         private Animator animator; 
+
+        private GameObject Wand { get; set; }
         #endregion
 
         public Player(Vector2 position)
@@ -53,7 +56,7 @@ namespace PortalGame.ComponentPattern
 
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
             spriteRenderer.SetSprite("Player\\Idle\\idle");
-            spriteRenderer.LayerDepth = 0.5f;
+            spriteRenderer.LayerDepth = 0.9f;
             spriteRenderer.Scale = 1f;
 
             animator = GameObject.GetComponent<Animator>() as Animator; 
@@ -69,7 +72,19 @@ namespace PortalGame.ComponentPattern
 
             movementKeys.Add(Keys.A, KeyButtonState.UP);
             movementKeys.Add(Keys.D, KeyButtonState.UP);
-            movementKeys.Add(Keys.W, KeyButtonState.UP); 
+            movementKeys.Add(Keys.W, KeyButtonState.UP);
+
+            // create wand 
+            CreateWand();
+        }
+
+        private void CreateWand()
+        {
+            Wand = WandFactory.Instance.Create(BeamType.Blue);
+
+            //Wand.Transform.Position = GameObject.Transform.Position; 
+
+            GameWorld.Instance.Instantiate(Wand);
         }
 
         /// <summary>
@@ -136,6 +151,12 @@ namespace PortalGame.ComponentPattern
                 jumpTime = 0;
                 canJump = false; 
             }
+        }
+
+        public void Aim(Vector2 direction)
+        {
+            Wand wand = Wand.GetComponent<Wand>() as Wand;
+            wand.Aim(direction, GameObject.Transform.Position); 
         }
 
         public void Shoot(Vector2 direction, BeamType beamType)
