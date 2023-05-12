@@ -96,6 +96,10 @@ namespace PortalGame.CommandPattern
                 // transform the mouse point with the inverted matrix 
                 Vector2 direction = Vector2.Transform(mousePoint, invertedMatrix);
 
+
+                player.Aim(direction); 
+
+
                 if (mouseState.LeftButton == ButtonState.Pressed && leftClickCooldown > cooldown)
                 {
                     player.Shoot(new Vector2(direction.X, direction.Y), BeamType.Red);
