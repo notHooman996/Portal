@@ -1,10 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
+using PortalGame;
 using PortalGame.ComponentPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BoundingBox = Microsoft.Xna.Framework.BoundingBox;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace Portal.ComponentPattern
 {
@@ -39,6 +44,23 @@ namespace Portal.ComponentPattern
                                                   (int)(spriteRenderer.Sprite.Width),
                                                   (int)(spriteRenderer.Sprite.Height)
                                                   );
+
+            // set boundingbox (Z is 0, since we work in 2D)
+            Vector3 topLeftCorner = new Vector3(
+                                                GameObject.Transform.Position.X - spriteRenderer.Sprite.Width / 2,
+                                                GameObject.Transform.Position.Y - spriteRenderer.Sprite.Height / 2, 
+                                                0
+                                                );
+            Vector3 bottomRightCorner = new Vector3(
+                                                GameObject.Transform.Position.X + spriteRenderer.Sprite.Width / 2,
+                                                GameObject.Transform.Position.Y + spriteRenderer.Sprite.Height / 2, 
+                                                0
+                                                );
+            
+            GameWorld.Instance.BoundingBoxes.Add(
+                                                 new BoundingBox(topLeftCorner, bottomRightCorner), 
+                                                 new Vector3(GameObject.Transform.Position.X, GameObject.Transform.Position.Y, 0)
+                                                 ); 
         }
     }
 }
