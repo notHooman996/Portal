@@ -11,6 +11,21 @@ using System.Threading.Tasks;
 
 namespace PortalGame.ComponentPattern.Portals
 {
+    public enum PortalType
+    {
+        Red,
+        Blue
+    }
+
+    public enum Side
+    {
+        Top,
+        Bottom,
+        Left,
+        Right,
+        None
+    }
+
     public class Portal : Component, IGameListener
     {
         private SpriteRenderer spriteRenderer;
@@ -52,12 +67,12 @@ namespace PortalGame.ComponentPattern.Portals
             {
                 GameObject other = (gameEvent as CollisionEvent).Other;
 
-                if (GameObject.Tag == BeamType.Red.ToString() && other.Tag == BeamType.Blue.ToString())
+                if (GameObject.Tag == PortalType.Red.ToString() && other.Tag == PortalType.Blue.ToString())
                 {
                     // remove blue portal 
                     GameWorld.Instance.Destroy(other);
                 }
-                if (GameObject.Tag == BeamType.Blue.ToString() && other.Tag == BeamType.Red.ToString())
+                if (GameObject.Tag == PortalType.Blue.ToString() && other.Tag == PortalType.Red.ToString())
                 {
                     // remove red portal 
                     GameWorld.Instance.Destroy(other);
