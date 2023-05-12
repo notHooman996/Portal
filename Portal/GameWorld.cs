@@ -54,6 +54,8 @@ namespace PortalGame
 
         public List<Collider> Colliders { get; private set; } = new List<Collider>();
 
+        public Dictionary<BoundingBox, Vector3> BoundingBoxes { get; set; } = new Dictionary<BoundingBox, Vector3>();
+
         public static Vector2 ScreenSize { get; private set; }
         #endregion
 
@@ -128,15 +130,7 @@ namespace PortalGame
             }
 
 
-            // get all tiles set 
-            //for (int y = 0; y < Map.TileCountY; y++)
-            //{
-            //    for (int x = 0; x < Map.TileCountX; x++)
-            //    {
-            //        gameObjects.Add(Map.AddTile(x, y));
-            //    }
-            //}
-
+            // set all tiles 
             for (int i = 0; i <= tileCountX; i++)
             {
                 for (int j = 0; j < tileCountY; j++)
@@ -163,9 +157,6 @@ namespace PortalGame
                     }
                 }
             }
-
-
-
         }
 
         protected override void LoadContent()

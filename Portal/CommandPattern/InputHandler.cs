@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using PortalGame.ComponentPattern;
+using PortalGame.ComponentPattern.Portals;
 using PortalGame.CreationalPattern;
 using PortalGame.ObserverPattern;
 using System;
@@ -96,20 +97,18 @@ namespace PortalGame.CommandPattern
                 // transform the mouse point with the inverted matrix 
                 Vector2 direction = Vector2.Transform(mousePoint, invertedMatrix);
 
-
                 player.Aim(direction); 
-
 
                 if (mouseState.LeftButton == ButtonState.Pressed && leftClickCooldown > cooldown)
                 {
-                    player.Shoot(new Vector2(direction.X, direction.Y), BeamType.Red);
+                    player.Shoot(PortalType.Red); 
 
                     leftClickCooldown = 0;
                 }
 
                 if (mouseState.RightButton == ButtonState.Pressed && rightClickCooldown > cooldown)
                 {
-                    player.Shoot(new Vector2(direction.X, direction.Y), BeamType.Blue);
+                    player.Shoot(PortalType.Blue);
 
                     rightClickCooldown = 0;
                 }

@@ -150,7 +150,7 @@ namespace Portal.CreationalPattern
             {
                 case Side.Top:
                     gameObject = (GameObject)topPrototype.Clone();
-                    gameObject.Tag = BeamType.Blue.ToString();
+                    gameObject.Tag = PortalType.Blue.ToString();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
@@ -160,7 +160,7 @@ namespace Portal.CreationalPattern
                     break;
                 case Side.Bottom:
                     gameObject = (GameObject)bottomPrototype.Clone();
-                    gameObject.Tag = BeamType.Blue.ToString();
+                    gameObject.Tag = PortalType.Blue.ToString();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
@@ -170,7 +170,7 @@ namespace Portal.CreationalPattern
                     break;
                 case Side.Left:
                     gameObject = (GameObject)leftPrototype.Clone();
-                    gameObject.Tag = BeamType.Blue.ToString();
+                    gameObject.Tag = PortalType.Blue.ToString();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
@@ -180,7 +180,7 @@ namespace Portal.CreationalPattern
                     break;
                 case Side.Right:
                     gameObject = (GameObject)rightPrototype.Clone();
-                    gameObject.Tag = BeamType.Blue.ToString();
+                    gameObject.Tag = PortalType.Blue.ToString();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);

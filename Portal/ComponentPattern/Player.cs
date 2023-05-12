@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Input;
 using Portal.ComponentPattern;
 using Portal.CreationalPattern;
 using PortalGame.CommandPattern;
-using PortalGame.ComponentPattern.Beams;
 using PortalGame.ComponentPattern.Portals;
 using PortalGame.CreationalPattern;
 using PortalGame.ObserverPattern;
@@ -80,9 +79,7 @@ namespace PortalGame.ComponentPattern
 
         private void CreateWand()
         {
-            Wand = WandFactory.Instance.Create(BeamType.Blue);
-
-            //Wand.Transform.Position = GameObject.Transform.Position; 
+            Wand = WandFactory.Instance.Create(PortalType.Blue);
 
             GameWorld.Instance.Instantiate(Wand);
         }
@@ -159,26 +156,10 @@ namespace PortalGame.ComponentPattern
             wand.Aim(direction, GameObject.Transform.Position); 
         }
 
-        public void Shoot(Vector2 direction, BeamType beamType)
+        public void Shoot(PortalType portalType)
         {
-            GameObject beamObject = BeamFactory.Instance.Create(beamType);
-            beamObject.Transform.Position = GameObject.Transform.Position;
-
-            //Atan2 gives an angle measured in radians, between -Pi abd Pi
-            beamObject.Transform.Rotation = MathF.Atan2(direction.Y - beamObject.Transform.Position.Y, direction.X - beamObject.Transform.Position.X);
-
-            if (beamType == BeamType.Red)
-            {
-                RedBeam beam = (RedBeam)beamObject.GetComponent<RedBeam>();
-                beam.Direction = new Vector2(direction.X - beamObject.Transform.Position.X, direction.Y - beamObject.Transform.Position.Y);
-            } 
-            else if(beamType == BeamType.Blue)
-            {
-                BlueBeam beam = (BlueBeam)beamObject.GetComponent<BlueBeam>();
-                beam.Direction = new Vector2(direction.X - beamObject.Transform.Position.X, direction.Y - beamObject.Transform.Position.Y);
-            }
-
-            GameWorld.Instance.Instantiate(beamObject); 
+            Wand wand = Wand.GetComponent<Wand>() as Wand;
+            wand.Shoot(portalType); 
         }
 
         public void Move(Vector2 velocity)
@@ -215,7 +196,7 @@ namespace PortalGame.ComponentPattern
                 if (redPortal != null && bluePortal != null)
                 {
                     // when colliding with portal 
-                    if (other.Tag == BeamType.Red.ToString())
+                    if (other.Tag == PortalType.Red.ToString())
                     {
                         // get blue portals position 
                         GameObject bluePortalObject = GameWorld.Instance.GetObjectOfType<BluePortal>();
@@ -225,7 +206,7 @@ namespace PortalGame.ComponentPattern
                         
                         SetCollisionBox();
                     }
-                    if (other.Tag == BeamType.Blue.ToString())
+                    if (other.Tag == PortalType.Blue.ToString())
                     {
                         // get red portals position 
                         GameObject redPortalObject = GameWorld.Instance.GetObjectOfType<RedPortal>();

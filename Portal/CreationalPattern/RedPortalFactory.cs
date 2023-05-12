@@ -14,14 +14,6 @@ using SharpDX.Direct3D9;
 
 namespace Portal.CreationalPattern
 {
-    public enum Side
-    {
-        Top,
-        Bottom, 
-        Left, 
-        Right
-    }
-
     public class RedPortalFactory : Factory
     {
         private static RedPortalFactory instance;
@@ -159,7 +151,7 @@ namespace Portal.CreationalPattern
             {
                 case Side.Top:
                     gameObject = (GameObject)topPrototype.Clone();
-                    gameObject.Tag = BeamType.Red.ToString();
+                    gameObject.Tag = PortalType.Red.ToString();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
                     collider.CollisionEvent.Attach(redPortal);
@@ -169,7 +161,7 @@ namespace Portal.CreationalPattern
                     break;
                 case Side.Bottom:
                     gameObject = (GameObject)bottomPrototype.Clone();
-                    gameObject.Tag = BeamType.Red.ToString();
+                    gameObject.Tag = PortalType.Red.ToString();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
                     collider.CollisionEvent.Attach(redPortal);
@@ -179,7 +171,7 @@ namespace Portal.CreationalPattern
                     break;
                 case Side.Left:
                     gameObject = (GameObject)leftPrototype.Clone();
-                    gameObject.Tag = BeamType.Red.ToString();
+                    gameObject.Tag = PortalType.Red.ToString();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
                     collider.CollisionEvent.Attach(redPortal);
@@ -189,7 +181,7 @@ namespace Portal.CreationalPattern
                     break;
                 case Side.Right:
                     gameObject = (GameObject)rightPrototype.Clone();
-                    gameObject.Tag = BeamType.Red.ToString();
+                    gameObject.Tag = PortalType.Red.ToString();
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
                     collider.CollisionEvent.Attach(redPortal);

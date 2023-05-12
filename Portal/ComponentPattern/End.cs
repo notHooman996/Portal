@@ -11,7 +11,8 @@ namespace Portal.ComponentPattern
     public class End : Component
     {
         private Vector2 position;
-        private SpriteRenderer spriteRenderer; 
+        private SpriteRenderer spriteRenderer;
+        private Collider collider; 
 
         public End(Vector2 position)
         {
@@ -26,7 +27,16 @@ namespace Portal.ComponentPattern
             spriteRenderer.Scale = 1f;
 
             GameObject.Transform.Position = position;
-            GameObject.Tag = "End"; 
+            GameObject.Tag = "End";
+
+            // set collisionbox 
+            collider = GameObject.GetComponent<Collider>() as Collider; 
+            collider.CollisionBox = new Rectangle(
+                                                  (int)(GameObject.Transform.Position.X - spriteRenderer.Sprite.Width / 2),
+                                                  (int)(GameObject.Transform.Position.Y - spriteRenderer.Sprite.Height / 2),
+                                                  (int)(spriteRenderer.Sprite.Width),
+                                                  (int)(spriteRenderer.Sprite.Height)
+                                                  );
         }
     }
 }
