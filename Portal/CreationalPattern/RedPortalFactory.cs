@@ -51,13 +51,13 @@ namespace Portal.CreationalPattern
         {
             redPrototype = new GameObject();
             SpriteRenderer spriteRenderer = (SpriteRenderer)redPrototype.AddComponent(new SpriteRenderer());
-            spriteRenderer.SetSprite("Portal\\Purple\\purple1");
+            spriteRenderer.SetSprite("Portal\\Pink\\pink1");
             spriteRenderer.LayerDepth = 0.9f;
             spriteRenderer.Scale = 1f;
             redPrototype.AddComponent(new RedPortal());
             redPrototype.AddComponent(new Collider());
             animator = redPrototype.AddComponent(new Animator()) as Animator;
-            animator.AddAnimation(BuildAnimation("Default", new string[] { "Portal\\Purple\\purple1" }));
+            animator.AddAnimation(BuildAnimation("Default", new string[] { "Portal\\Pink\\pink1" }));
         }
 
         private void CreateTopPrototype()
@@ -68,7 +68,7 @@ namespace Portal.CreationalPattern
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Purple\\purple{i + 1}";
+                sprites[i] = $"Portal\\Pink\\pink{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Top", sprites));
         }
@@ -81,7 +81,7 @@ namespace Portal.CreationalPattern
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Purple\\purple{i + 1}";
+                sprites[i] = $"Portal\\Pink\\pink{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Bottom", sprites));
         }
@@ -94,7 +94,7 @@ namespace Portal.CreationalPattern
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Purple\\purple{i + 1}";
+                sprites[i] = $"Portal\\Pink\\pink{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Left", sprites));
         }
@@ -107,7 +107,7 @@ namespace Portal.CreationalPattern
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Purple\\purple{i + 1}";
+                sprites[i] = $"Portal\\Pink\\pink{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Right", sprites));
         }
