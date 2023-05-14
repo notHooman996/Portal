@@ -21,13 +21,17 @@ namespace Portal.ComponentPattern
     public class Wand : Component
     {
         private SpriteRenderer spriteRenderer;
-        private Vector2 aimDirection; 
+        private Vector2 aimDirection;
+        private Vector2 playerPosition; 
 
-        public void Aim(Vector2 direction, Vector2 center)
+        public void Aim(Vector2 direction, Vector2 playerPosition)
         {
+            // save the players position 
+            this.playerPosition = playerPosition; 
+
             int displacement = 10;
 
-            aimDirection = new Vector2(direction.X - center.X, direction.Y - center.Y);
+            aimDirection = new Vector2(direction.X - playerPosition.X, direction.Y - playerPosition.Y);
 
             if (aimDirection != Vector2.Zero)
             {
@@ -35,7 +39,7 @@ namespace Portal.ComponentPattern
             }
 
             // set position 
-            GameObject.Transform.Position = center + displacement * aimDirection;
+            GameObject.Transform.Position = playerPosition + displacement * aimDirection;
 
             // set rotation 
             GameObject.Transform.Rotation = (float)Math.Atan2(aimDirection.Y, aimDirection.X);
@@ -44,7 +48,7 @@ namespace Portal.ComponentPattern
         public void Shoot(PortalType portalType)
         {
             // define the rays start to the wands position (the Z is set to 0, since we work in 2D)
-            Vector3 originPoint = new Vector3(GameObject.Transform.Position.X, GameObject.Transform.Position.Y, 0);
+            Vector3 originPoint = new Vector3(playerPosition.X, playerPosition.Y, 0);
             // define the rays direction to the aimdirection (the Z is set to 0, since we work in 2D)
             Vector3 shootDirection = new Vector3(aimDirection.X, aimDirection.Y, 0); 
             // set the ray 
