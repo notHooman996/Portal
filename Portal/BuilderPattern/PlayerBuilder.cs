@@ -57,6 +57,9 @@ namespace PortalGame.BuilderPattern
             animator.AddAnimation(BuildAnimation("Idle", idle));
             animator.AddAnimation(BuildAnimation("WalkLeft", leftWalk));
             animator.AddAnimation(BuildAnimation("WalkRight", rightWalk));
+
+            // UI 
+            gameObject.AddComponent(new UIRenderer()); 
         }
 
         /// <summary>
