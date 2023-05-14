@@ -4,6 +4,7 @@ using PortalGame;
 using PortalGame.ComponentPattern;
 using PortalGame.ComponentPattern.Portals;
 using PortalGame.CreationalPattern;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,11 +22,6 @@ namespace Portal.ComponentPattern
     {
         private SpriteRenderer spriteRenderer;
         private Vector2 aimDirection; 
-
-        public Wand()
-        {
-
-        }
 
         public void Aim(Vector2 direction, Vector2 center)
         {
@@ -54,19 +50,8 @@ namespace Portal.ComponentPattern
             // set the ray 
             Ray ray = new Ray(originPoint, shootDirection);
 
-            // dictionary for hit boundingboxes, and their position 
-            BoundingBox hitBoundingBox = GameWorld.Instance.BoundingBoxes.Keys.First();
-
-            // get all boundingboxes 
-            foreach (BoundingBox boundingBox in GameWorld.Instance.BoundingBoxes.Keys)
-            {
-                // check for intersection between ray and boundingbox 
-                if(boundingBox.Intersects(ray) != null && 
-                   Vector3.Distance(GameWorld.Instance.BoundingBoxes[boundingBox], ray.Position) < Vector3.Distance(GameWorld.Instance.BoundingBoxes[hitBoundingBox], ray.Position))
-                {
-                    hitBoundingBox = boundingBox; 
-                }
-            }
+            // find the hit boundingbox 
+            BoundingBox hitBoundingBox = FindHitBoundingBox(ray); 
 
             // check hit boundingbox again 
             float? distance = ray.Intersects(hitBoundingBox);
@@ -95,13 +80,31 @@ namespace Portal.ComponentPattern
                         gameObject = BluePortalFactory.Instance.Create(side);
                     }
 
-                    // set the portals position at intersectionpoint 
-                    gameObject.Transform.Position = new Vector2(intersectionPoint.X, intersectionPoint.Y);
+                    // set the portals position 
+                    gameObject.Transform.Position = SetPortalPosition(side, intersectionPoint, GameWorld.Instance.BoundingBoxes[hitBoundingBox]);
 
                     // add portal object to GameWorld 
                     GameWorld.Instance.Instantiate(gameObject);
                 }
             }
+        }
+
+        private BoundingBox FindHitBoundingBox(Ray ray)
+        {
+            BoundingBox hitBoundingBox = GameWorld.Instance.BoundingBoxes.Keys.First();
+
+            // get all boundingboxes 
+            foreach (BoundingBox boundingBox in GameWorld.Instance.BoundingBoxes.Keys)
+            {
+                // check for intersection between ray and boundingbox 
+                if (boundingBox.Intersects(ray) != null &&
+                Vector3.Distance(GameWorld.Instance.BoundingBoxes[boundingBox], ray.Position) < Vector3.Distance(GameWorld.Instance.BoundingBoxes[hitBoundingBox], ray.Position))
+                {
+                    hitBoundingBox = boundingBox;
+                }
+            }
+
+            return hitBoundingBox; 
         }
 
         private Side CheckSide(Vector3 intersectionPoint, Vector3 platformCenter)
@@ -135,6 +138,180 @@ namespace Portal.ComponentPattern
             }
 
             return Side.None; 
+        }
+
+        private Vector2 SetPortalPosition(Side side, Vector3 intersectionPoint, Vector3 platformCenter)
+        {
+            // set the portals position at intersectionpoint 
+            Vector2 position = new Vector2(intersectionPoint.X, intersectionPoint.Y);
+
+            // take care of outlier cases, for when platforms are in a corner, or are edges 
+            switch (side)
+            {
+                case Side.Top:
+                    // check left of 
+                    if (intersectionPoint.X < platformCenter.X)
+                    {
+                        // corner case: check whether there is a platform up to the left
+                        if (CheckIfOutlier(intersectionPoint, new Vector3(-1, -1, 0)))
+                        {
+                            position.X = platformCenter.X;
+                        }
+
+                        // edge case: check whether there is no a platform to the left 
+                        else if (!CheckIfOutlier(intersectionPoint + new Vector3(0, -32, 0), new Vector3(-1, 1, 0)))
+                        {
+                            position.X = platformCenter.X;
+                        }
+                    }
+
+                    // check right of 
+                    else if (intersectionPoint.X > platformCenter.X)
+                    {
+                        // corner case: check whether there is a platform up to the right
+                        if (CheckIfOutlier(intersectionPoint, new Vector3(1, -1, 0)))
+                        {
+                            position.X = platformCenter.X;
+                        }
+
+                        // edge case: check whether there is no a platform to the right 
+                        else if (!CheckIfOutlier(intersectionPoint + new Vector3(0, -32, 0), new Vector3(1, 1, 0)))
+                        {
+                            position.X = platformCenter.X;
+                        }
+                    }
+
+                    break;
+                case Side.Bottom:
+                    // check left of 
+                    if (intersectionPoint.X < platformCenter.X)
+                    {
+                        // corner case: check whether there is a platform down to the left
+                        if (CheckIfOutlier(intersectionPoint, new Vector3(-1, 1, 0)))
+                        {
+                            position.X = platformCenter.X;
+                        }
+
+                        // edge case: check whether there is no a platform to the left 
+                        else if (!CheckIfOutlier(intersectionPoint + new Vector3(0, 32, 0), new Vector3(-1, -1, 0)))
+                        {
+                            position.X = platformCenter.X;
+                        }
+                    }
+
+                    // check right of 
+                    else if (intersectionPoint.X > platformCenter.X)
+                    {
+                        // corner case: check whether there is a platform down to the right
+                        if (CheckIfOutlier(intersectionPoint, new Vector3(1, 1, 0)))
+                        {
+                            position.X = platformCenter.X;
+                        }
+
+                        // edge case: check whether there is no a platform to the right 
+                        else if (!CheckIfOutlier(intersectionPoint + new Vector3(0, 32, 0), new Vector3(1, -1, 0)))
+                        {
+                            position.X = platformCenter.X;
+                        }
+                    }
+
+                    break;
+                case Side.Left:
+                    // check above of 
+                    if (intersectionPoint.Y < platformCenter.Y)
+                    {
+                        // corner case: check whether there is a platform up to the left
+                        if (CheckIfOutlier(intersectionPoint, new Vector3(-1, -1, 0)))
+                        {
+                            position.Y = platformCenter.Y;
+                        }
+
+                        // edge case: check whether there is no a platform above 
+                        else if (!CheckIfOutlier(intersectionPoint + new Vector3(-32, 0, 0), new Vector3(1, -1, 0)))
+                        {
+                            position.Y = platformCenter.Y;
+                        }
+                    }
+
+                    // check below of 
+                    else if (intersectionPoint.Y > platformCenter.Y)
+                    {
+                        // corner case: check whether there is a platform down to the left
+                        if (CheckIfOutlier(intersectionPoint, new Vector3(-1, 1, 0)))
+                        {
+                            position.Y = platformCenter.Y;
+                        }
+
+                        // edge case: check whether there is no a platform below 
+                        else if (!CheckIfOutlier(intersectionPoint + new Vector3(-32, 0, 0), new Vector3(1, 1, 0)))
+                        {
+                            position.Y = platformCenter.Y;
+                        }
+                    }
+
+                    break;
+                case Side.Right:
+                    // check above of 
+                    if (intersectionPoint.Y < platformCenter.Y)
+                    {
+                        // corner case: check whether there is a platform up to the right
+                        if (CheckIfOutlier(intersectionPoint, new Vector3(1, -1, 0)))
+                        {
+                            position.Y = platformCenter.Y;
+                        }
+
+                        // edge case: check whether there is no a platform above 
+                        else if (!CheckIfOutlier(intersectionPoint + new Vector3(32, 0, 0), new Vector3(-1, -1, 0)))
+                        {
+                            position.Y = platformCenter.Y;
+                        }
+                    }
+
+                    // check below of 
+                    else if (intersectionPoint.Y > platformCenter.Y)
+                    {
+                        // corner case: check whether there is a platform down to the right
+                        if (CheckIfOutlier(intersectionPoint, new Vector3(1, 1, 0)))
+                        {
+                            position.Y = platformCenter.Y;
+                        }
+
+                        // edge case: check whether there is no a platform below 
+                        else if (!CheckIfOutlier(intersectionPoint + new Vector3(32, 0, 0), new Vector3(-1, 1, 0)))
+                        {
+                            position.Y = platformCenter.Y;
+                        }
+                    }
+
+                    break;
+            }
+
+            return position; 
+        }
+
+        private bool CheckIfOutlier(Vector3 rayStartpoint, Vector3 rayDirection)
+        {
+            float distance = 100;
+
+            // make ray that shoots diagonally 
+            Ray ray = new Ray(rayStartpoint, rayDirection);
+
+            // find closest boundingbox the ray hits 
+            BoundingBox hitBoundingBox = FindHitBoundingBox(ray);
+
+            // get the distance for the hit boundingbox 
+            float? boundingboxDistance = ray.Intersects(hitBoundingBox);
+
+            if (boundingboxDistance.HasValue)
+            {
+                // check if boundingbox is inside corner distance 
+                if (boundingboxDistance < distance)
+                {
+                    return true; 
+                }
+            }
+
+            return false; 
         }
     }
 }
