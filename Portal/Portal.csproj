@@ -16,6 +16,15 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Player\Idle\" />
+    <Folder Include="Content\Player\WalkingLeft\" />
+    <Folder Include="Content\Player\WalkingRight\" />
+    <Folder Include="Content\Portal\Green\" />
+    <Folder Include="Content\Portal\Green\Bottom\" />
+    <Folder Include="Content\Portal\Green\Left\" />
+    <Folder Include="Content\Portal\Green\Right\" />
+    <Folder Include="Content\Portal\Green\Top\" />
+    <Folder Include="Content\Portal\Pink\" />
     <Folder Include="Content\Tiles\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

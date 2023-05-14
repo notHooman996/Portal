@@ -202,7 +202,7 @@ namespace PortalGame.ComponentPattern
                         GameObject bluePortalObject = GameWorld.Instance.GetObjectOfType<BluePortal>();
 
                         // set players position to blue portal, plus offset 
-                        GameObject.Transform.Position = bluePortalObject.Transform.Position + (bluePortal.PlayerDisplacement * spriteRenderer.Sprite.Width *1.5f);
+                        GameObject.Transform.Position = bluePortalObject.Transform.Position + (bluePortal.PlayerDisplacement * spriteRenderer.Sprite.Width);
                         
                         SetCollisionBox();
                     }
@@ -212,7 +212,7 @@ namespace PortalGame.ComponentPattern
                         GameObject redPortalObject = GameWorld.Instance.GetObjectOfType<RedPortal>();
 
                         // set player position to red portal, plus offset 
-                        GameObject.Transform.Position = redPortalObject.Transform.Position + (redPortal.PlayerDisplacement * spriteRenderer.Sprite.Width *1.5f);
+                        GameObject.Transform.Position = redPortalObject.Transform.Position + (redPortal.PlayerDisplacement * spriteRenderer.Sprite.Width);
                         
                         SetCollisionBox();
                     }
