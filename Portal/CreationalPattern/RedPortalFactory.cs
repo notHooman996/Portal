@@ -51,7 +51,7 @@ namespace Portal.CreationalPattern
         {
             redPrototype = new GameObject();
             SpriteRenderer spriteRenderer = (SpriteRenderer)redPrototype.AddComponent(new SpriteRenderer());
-            spriteRenderer.SetSprite("Portal\\redportal_back");
+            spriteRenderer.SetSprite("Portal\\Purple\\purple1");
             spriteRenderer.LayerDepth = 0.9f;
             spriteRenderer.Scale = 1f;
             redPrototype.AddComponent(new RedPortal());

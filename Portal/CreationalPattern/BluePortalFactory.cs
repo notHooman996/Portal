@@ -50,7 +50,7 @@ namespace Portal.CreationalPattern
         {
             bluePrototype = new GameObject();
             SpriteRenderer spriteRenderer = (SpriteRenderer)bluePrototype.AddComponent(new SpriteRenderer());
-            spriteRenderer.SetSprite("Portal\\blueportal_back");
+            spriteRenderer.SetSprite("Portal\\Green\\green1");
             spriteRenderer.LayerDepth = 0.9f;
             spriteRenderer.Scale = 1f;
             bluePrototype.AddComponent(new BluePortal());
