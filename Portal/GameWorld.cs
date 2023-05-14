@@ -74,9 +74,12 @@ namespace PortalGame
         #region methods 
         protected override void Initialize()
         {
-            AddPlatforms(".\\..\\..\\..\\TileMapFiles\\TileMapTestLevel.txt"); 
+            // set up the level 
+            AddPlatforms(".\\..\\..\\..\\TileMapFiles\\TileMapTestLevel.txt");
 
-            
+            // add background 
+            Director bgDirector = new Director(new BackgroundBuilder());
+            gameObjects.Add(bgDirector.Construct()); 
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -129,7 +132,6 @@ namespace PortalGame
                 }
             }
 
-
             // set all tiles 
             for (int i = 0; i <= tileCountX; i++)
             {
@@ -179,13 +181,14 @@ namespace PortalGame
                 Exit();
 
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //MouseState = Mouse.GetState();
 
             userInterface.Update(gameTime);
 
             foreach (GameObject gameObject in gameObjects)
             {
                 gameObject.Update(gameTime);
+
+                // update camera 
                 Camera.Update(playerObject.Transform.Position);
             }
 
