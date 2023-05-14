@@ -16,6 +16,7 @@ namespace Portal.CreationalPattern
 {
     public class RedPortalFactory : Factory
     {
+        #region singleton 
         private static RedPortalFactory instance;
 
         public static RedPortalFactory Instance
@@ -29,10 +30,8 @@ namespace Portal.CreationalPattern
                 return instance;
             }
         }
+        #endregion
 
-        private Animator animator;
-
-        private GameObject redPrototype; 
         private GameObject topPrototype;
         private GameObject bottomPrototype;
         private GameObject leftPrototype;
@@ -40,77 +39,101 @@ namespace Portal.CreationalPattern
 
         private RedPortalFactory()
         {
-            CreateRedPrototype(); 
             CreateTopPrototype();
             CreateBottomPrototype();
             CreateLeftPrototype();
             CreateRightPrototype();
         }
 
-        private void CreateRedPrototype()
-        {
-            redPrototype = new GameObject();
-            SpriteRenderer spriteRenderer = (SpriteRenderer)redPrototype.AddComponent(new SpriteRenderer());
-            spriteRenderer.SetSprite("Portal\\Pink\\pink1");
-            spriteRenderer.LayerDepth = 0.9f;
-            spriteRenderer.Scale = 1f;
-            redPrototype.AddComponent(new RedPortal());
-            redPrototype.AddComponent(new Collider());
-            animator = redPrototype.AddComponent(new Animator()) as Animator;
-            animator.AddAnimation(BuildAnimation("Default", new string[] { "Portal\\Pink\\pink1" }));
-        }
-
+        #region prototypes 
         private void CreateTopPrototype()
         {
-            topPrototype = (GameObject)redPrototype.Clone();
+            topPrototype = new GameObject();
+
+            SpriteRenderer spriteRenderer = (SpriteRenderer)topPrototype.AddComponent(new SpriteRenderer());
+            spriteRenderer.SetSprite("Portal\\Pink\\Top\\pink1");
+            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.Scale = 1f;
+
+            topPrototype.AddComponent(new RedPortal());
+            topPrototype.AddComponent(new Collider());
 
             // add animation
+            Animator animator = topPrototype.AddComponent(new Animator()) as Animator;
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Pink\\pink{i + 1}";
+                sprites[i] = $"Portal\\Pink\\Top\\pink{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Top", sprites));
         }
 
         private void CreateBottomPrototype()
         {
-            bottomPrototype = (GameObject)redPrototype.Clone();
+            bottomPrototype = new GameObject();
+
+            SpriteRenderer spriteRenderer = (SpriteRenderer)bottomPrototype.AddComponent(new SpriteRenderer());
+            spriteRenderer.SetSprite("Portal\\Pink\\Bottom\\pink1");
+            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.Scale = 1f;
+
+            bottomPrototype.AddComponent(new RedPortal());
+            bottomPrototype.AddComponent(new Collider());
 
             // add animation
+            Animator animator = bottomPrototype.AddComponent(new Animator()) as Animator;
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Pink\\pink{i + 1}";
+                sprites[i] = $"Portal\\Pink\\Bottom\\pink{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Bottom", sprites));
         }
 
         private void CreateLeftPrototype()
         {
-            leftPrototype = (GameObject)redPrototype.Clone();
+            leftPrototype = new GameObject();
+
+            SpriteRenderer spriteRenderer = (SpriteRenderer)leftPrototype.AddComponent(new SpriteRenderer());
+            spriteRenderer.SetSprite("Portal\\Pink\\Left\\pink1");
+            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.Scale = 1f;
+
+            leftPrototype.AddComponent(new RedPortal());
+            leftPrototype.AddComponent(new Collider());
 
             // add animation
+            Animator animator = leftPrototype.AddComponent(new Animator()) as Animator;
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Pink\\pink{i + 1}";
+                sprites[i] = $"Portal\\Pink\\Left\\pink{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Left", sprites));
         }
 
         private void CreateRightPrototype()
         {
-            rightPrototype = (GameObject)redPrototype.Clone();
+            rightPrototype = new GameObject();
+
+            SpriteRenderer spriteRenderer = (SpriteRenderer)rightPrototype.AddComponent(new SpriteRenderer());
+            spriteRenderer.SetSprite("Portal\\Pink\\Right\\pink1");
+            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.Scale = 1f;
+
+            rightPrototype.AddComponent(new RedPortal());
+            rightPrototype.AddComponent(new Collider());
 
             // add animation
+            Animator animator = rightPrototype.AddComponent(new Animator()) as Animator;
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Pink\\pink{i + 1}";
+                sprites[i] = $"Portal\\Pink\\Right\\pink{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Right", sprites));
         }
+        #endregion
 
         /// <summary>
         /// Method that builds an animation using an array of sprite names
@@ -152,6 +175,8 @@ namespace Portal.CreationalPattern
                 case Side.Top:
                     gameObject = (GameObject)topPrototype.Clone();
                     gameObject.Tag = PortalType.Red.ToString();
+
+                    // attach collision event 
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
                     collider.CollisionEvent.Attach(redPortal);
@@ -162,6 +187,8 @@ namespace Portal.CreationalPattern
                 case Side.Bottom:
                     gameObject = (GameObject)bottomPrototype.Clone();
                     gameObject.Tag = PortalType.Red.ToString();
+
+                    // attach collision event 
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
                     collider.CollisionEvent.Attach(redPortal);
@@ -172,6 +199,8 @@ namespace Portal.CreationalPattern
                 case Side.Left:
                     gameObject = (GameObject)leftPrototype.Clone();
                     gameObject.Tag = PortalType.Red.ToString();
+
+                    // attach collision event 
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
                     collider.CollisionEvent.Attach(redPortal);
@@ -182,6 +211,8 @@ namespace Portal.CreationalPattern
                 case Side.Right:
                     gameObject = (GameObject)rightPrototype.Clone();
                     gameObject.Tag = PortalType.Red.ToString();
+
+                    // attach collision event 
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     redPortal = gameObject.GetComponent<RedPortal>() as RedPortal;
                     collider.CollisionEvent.Attach(redPortal);

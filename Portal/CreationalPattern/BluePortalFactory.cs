@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Portal.ComponentPattern;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace Portal.CreationalPattern
 {
     public class BluePortalFactory : Factory
     {
+        #region singleton
         private static BluePortalFactory instance;
 
         public static BluePortalFactory Instance
@@ -28,10 +30,8 @@ namespace Portal.CreationalPattern
                 return instance;
             }
         }
+        #endregion
 
-        private Animator animator; 
-
-        private GameObject bluePrototype;
         private GameObject topPrototype;
         private GameObject bottomPrototype;
         private GameObject leftPrototype;
@@ -39,77 +39,101 @@ namespace Portal.CreationalPattern
 
         private BluePortalFactory()
         {
-            CreateBluePrototype();
             CreateTopPrototype();
             CreateBottomPrototype();
             CreateLeftPrototype();
             CreateRightPrototype();
         }
 
-        private void CreateBluePrototype()
-        {
-            bluePrototype = new GameObject();
-            SpriteRenderer spriteRenderer = (SpriteRenderer)bluePrototype.AddComponent(new SpriteRenderer());
-            spriteRenderer.SetSprite("Portal\\Green\\green1");
-            spriteRenderer.LayerDepth = 0.9f;
-            spriteRenderer.Scale = 1f;
-            bluePrototype.AddComponent(new BluePortal());
-            bluePrototype.AddComponent(new Collider());
-            animator = bluePrototype.AddComponent(new Animator()) as Animator;
-            animator.AddAnimation(BuildAnimation("Default", new string[] { "Portal\\Green\\green1" }));
-        }
-
+        #region prototypes 
         private void CreateTopPrototype()
         {
-            topPrototype = (GameObject)bluePrototype.Clone();
+            topPrototype = new GameObject();
+
+            SpriteRenderer spriteRenderer = (SpriteRenderer)topPrototype.AddComponent(new SpriteRenderer());
+            spriteRenderer.SetSprite("Portal\\Green\\Top\\green1"); 
+            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.Scale = 1f;
+
+            topPrototype.AddComponent(new BluePortal());
+            topPrototype.AddComponent(new Collider());
 
             // add animation
+            Animator animator = topPrototype.AddComponent(new Animator()) as Animator;
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Green\\green{i + 1}";
+                sprites[i] = $"Portal\\Green\\Top\\green{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Top", sprites));
         }
 
         private void CreateBottomPrototype()
         {
-            bottomPrototype = (GameObject)bluePrototype.Clone();
+            bottomPrototype = new GameObject();
+
+            SpriteRenderer spriteRenderer = (SpriteRenderer)bottomPrototype.AddComponent(new SpriteRenderer());
+            spriteRenderer.SetSprite("Portal\\Green\\Bottom\\green1");
+            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.Scale = 1f;
+
+            bottomPrototype.AddComponent(new BluePortal());
+            bottomPrototype.AddComponent(new Collider());
 
             // add animation
+            Animator animator = bottomPrototype.AddComponent(new Animator()) as Animator;
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Green\\green{i + 1}";
+                sprites[i] = $"Portal\\Green\\Bottom\\green{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Bottom", sprites));
         }
 
         private void CreateLeftPrototype()
         {
-            leftPrototype = (GameObject)bluePrototype.Clone();
+            leftPrototype = new GameObject();
+
+            SpriteRenderer spriteRenderer = (SpriteRenderer)leftPrototype.AddComponent(new SpriteRenderer());
+            spriteRenderer.SetSprite("Portal\\Green\\Left\\green1");
+            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.Scale = 1f;
+
+            leftPrototype.AddComponent(new BluePortal());
+            leftPrototype.AddComponent(new Collider());
 
             // add animation
+            Animator animator = leftPrototype.AddComponent(new Animator()) as Animator;
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Green\\green{i+1}";
+                sprites[i] = $"Portal\\Green\\Left\\green{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Left", sprites));
         }
 
         private void CreateRightPrototype()
         {
-            rightPrototype = (GameObject)bluePrototype.Clone();
+            rightPrototype = new GameObject();
+
+            SpriteRenderer spriteRenderer = (SpriteRenderer)rightPrototype.AddComponent(new SpriteRenderer());
+            spriteRenderer.SetSprite("Portal\\Green\\Right\\green1");
+            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.Scale = 1f;
+
+            rightPrototype.AddComponent(new BluePortal());
+            rightPrototype.AddComponent(new Collider());
 
             // add animation
+            Animator animator = rightPrototype.AddComponent(new Animator()) as Animator;
             string[] sprites = new string[8];
             for (int i = 0; i < sprites.Length; i++)
             {
-                sprites[i] = $"Portal\\Green\\green{i + 1}";
+                sprites[i] = $"Portal\\Green\\Right\\green{i + 1}";
             }
             animator.AddAnimation(BuildAnimation("Right", sprites));
         }
+        #endregion
 
         /// <summary>
         /// Method that builds an animation using an array of sprite names
@@ -142,6 +166,7 @@ namespace Portal.CreationalPattern
                 GameWorld.Instance.Destroy(bluePortalObject);
             }
 
+            // then create new portal 
             GameObject gameObject = new GameObject();
             Collider collider;
             BluePortal bluePortal;
@@ -151,6 +176,8 @@ namespace Portal.CreationalPattern
                 case Side.Top:
                     gameObject = (GameObject)topPrototype.Clone();
                     gameObject.Tag = PortalType.Blue.ToString();
+
+                    // attach collision event 
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
@@ -161,6 +188,8 @@ namespace Portal.CreationalPattern
                 case Side.Bottom:
                     gameObject = (GameObject)bottomPrototype.Clone();
                     gameObject.Tag = PortalType.Blue.ToString();
+
+                    // attach collision event 
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
@@ -171,6 +200,8 @@ namespace Portal.CreationalPattern
                 case Side.Left:
                     gameObject = (GameObject)leftPrototype.Clone();
                     gameObject.Tag = PortalType.Blue.ToString();
+
+                    // attach collision event 
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
@@ -181,6 +212,8 @@ namespace Portal.CreationalPattern
                 case Side.Right:
                     gameObject = (GameObject)rightPrototype.Clone();
                     gameObject.Tag = PortalType.Blue.ToString();
+
+                    // attach collision event 
                     collider = gameObject.GetComponent<Collider>() as Collider;
                     bluePortal = gameObject.GetComponent<BluePortal>() as BluePortal;
                     collider.CollisionEvent.Attach(bluePortal);
