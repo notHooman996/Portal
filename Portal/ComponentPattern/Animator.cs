@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Portal.MenuStates;
 
 namespace Portal.ComponentPattern
 {
@@ -30,7 +31,7 @@ namespace Portal.ComponentPattern
 
         public override void Update(GameTime gameTime)
         {
-            timeElapsed += GameWorld.DeltaTime;
+            timeElapsed += GameState.DeltaTime;
 
             CurrentIndex = (int)(timeElapsed * currentAnimation.FPS);
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PortalGame.ObserverPattern;
 using PortalGame.ObserverPattern.TileCollisionEvents;
 using System.Diagnostics;
+using Portal.MenuStates;
 
 namespace PortalGame.ComponentPattern
 {
@@ -105,7 +106,7 @@ namespace PortalGame.ComponentPattern
         /// </summary>
         private void CheckCollision()
         {
-            foreach (Collider other in GameWorld.Instance.Colliders)
+            foreach (Collider other in GameState.Colliders)
             {
                 if (other != this && other.CollisionBox.Intersects(CollisionBox))
                 {

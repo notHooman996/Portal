@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Portal.MenuStates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,8 @@ namespace PortalGame
 
         public void Update(Vector2 position)
         {
-            float xOffset = GameWorld.Instance.LevelSize.X;
-            float yOffset = GameWorld.Instance.LevelSize.Y;
+            float xOffset = GameState.LevelSize.X; 
+            float yOffset = GameState.LevelSize.Y;
 
             if (position.X < viewport.Width / 2)
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Portal.MenuStates;
 using PortalGame.ComponentPattern;
 using PortalGame.ComponentPattern.Portals;
 using PortalGame.CreationalPattern;
@@ -50,7 +51,7 @@ namespace PortalGame.CommandPattern
         /// </summary>
         private InputHandler()
         {
-            Player player = GameWorld.Instance.FindObjectOfType<Player>() as Player;
+            Player player = GameState.FindObjectOfType<Player>() as Player;
             buttonEvent.Attach(player); 
 
             keybinds.Add(new KeyInfo(Keys.A), new MoveCommand(new Vector2(-1, 0)));
@@ -84,8 +85,8 @@ namespace PortalGame.CommandPattern
 
             MouseState mouseState = Mouse.GetState();
 
-            leftClickCooldown += GameWorld.DeltaTime; 
-            rightClickCooldown += GameWorld.DeltaTime;
+            leftClickCooldown += GameState.DeltaTime; 
+            rightClickCooldown += GameState.DeltaTime;
 
             if (mouseState.X >= 0 && mouseState.Y >= 0 &&
                mouseState.X <= GameWorld.ScreenSize.X && mouseState.Y <= GameWorld.ScreenSize.Y)
@@ -93,7 +94,7 @@ namespace PortalGame.CommandPattern
                 // get the mouse position 
                 Vector2 mousePoint = new Vector2(mouseState.X, mouseState.Y);
                 // invert the camera transform matrix 
-                Matrix invertedMatrix = Matrix.Invert(GameWorld.Instance.Camera.Transform);
+                Matrix invertedMatrix = Matrix.Invert(GameState.Camera.Transform);
                 // transform the mouse point with the inverted matrix 
                 Vector2 direction = Vector2.Transform(mousePoint, invertedMatrix);
 

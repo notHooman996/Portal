@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Portal.MenuStates;
 using PortalGame;
 using PortalGame.ComponentPattern;
 using System;
@@ -56,8 +57,8 @@ namespace Portal.ComponentPattern
                                                 GameObject.Transform.Position.Y + spriteRenderer.Sprite.Height / 2, 
                                                 0
                                                 );
-            
-            GameWorld.Instance.BoundingBoxes.Add(
+
+            GameState.BoundingBoxes.Add(
                                                  new BoundingBox(topLeftCorner, bottomRightCorner), 
                                                  new Vector3(GameObject.Transform.Position.X, GameObject.Transform.Position.Y, 0)
                                                  ); 

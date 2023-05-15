@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Portal.ComponentPattern;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using Portal.MenuStates;
 
 namespace Portal.CreationalPattern
 {
@@ -52,7 +53,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)topPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Green\\Top\\green1"); 
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             topPrototype.AddComponent(new BluePortal());
@@ -74,7 +75,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)bottomPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Green\\Bottom\\green1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             bottomPrototype.AddComponent(new BluePortal());
@@ -96,7 +97,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)leftPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Green\\Left\\green1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             leftPrototype.AddComponent(new BluePortal());
@@ -118,7 +119,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)rightPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Green\\Right\\green1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             rightPrototype.AddComponent(new BluePortal());
@@ -159,11 +160,11 @@ namespace Portal.CreationalPattern
         {
             // remove old portal 
             // find the blue portal object 
-            GameObject bluePortalObject = GameWorld.Instance.GetObjectOfType<BluePortal>();
+            GameObject bluePortalObject = GameState.GetObjectOfType<BluePortal>();
             // destroy blue portal 
             if (bluePortalObject != null)
             {
-                GameWorld.Instance.Destroy(bluePortalObject);
+                GameState.Destroy(bluePortalObject);
             }
 
             // then create new portal 

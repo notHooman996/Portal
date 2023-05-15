@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Portal.MenuStates;
 using PortalGame;
 using PortalGame.ComponentPattern;
 using System;
@@ -19,7 +20,7 @@ namespace Portal.ComponentPattern
             spriteRenderer.SetSprite("BG\\bg");
             spriteRenderer.Scale = 1f;
             spriteRenderer.LayerDepth = 0.1f;
-            GameObject.Transform.Position = new Vector2(GameWorld.Instance.LevelSize.X / 2, GameWorld.Instance.LevelSize.Y / 2);
+            GameObject.Transform.Position = new Vector2(GameState.LevelSize.X / 2, GameState.LevelSize.Y / 2);
         }
     }
 }
