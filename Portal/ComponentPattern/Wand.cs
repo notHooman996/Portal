@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Portal.CreationalPattern;
+using Portal.MenuStates;
 using PortalGame;
 using PortalGame.ComponentPattern;
 using PortalGame.ComponentPattern.Portals;
@@ -67,7 +68,7 @@ namespace Portal.ComponentPattern
                 Vector3 intersectionPoint = ray.Position + ray.Direction * distance.Value;
 
                 // check which side the portal should be on 
-                Side side = CheckSide(intersectionPoint, GameWorld.Instance.BoundingBoxes[hitBoundingBox]);
+                Side side = CheckSide(intersectionPoint, GameState.BoundingBoxes[hitBoundingBox]);
 
                 // if no side set, then do not create object 
                 if (side != Side.None)
@@ -85,24 +86,24 @@ namespace Portal.ComponentPattern
                     }
 
                     // set the portals position 
-                    gameObject.Transform.Position = SetPortalPosition(side, intersectionPoint, GameWorld.Instance.BoundingBoxes[hitBoundingBox]);
+                    gameObject.Transform.Position = SetPortalPosition(side, intersectionPoint, GameState.BoundingBoxes[hitBoundingBox]);
 
                     // add portal object to GameWorld 
-                    GameWorld.Instance.Instantiate(gameObject);
+                    GameState.Instantiate(gameObject);
                 }
             }
         }
 
         private BoundingBox FindHitBoundingBox(Ray ray)
         {
-            BoundingBox hitBoundingBox = GameWorld.Instance.BoundingBoxes.Keys.First();
+            BoundingBox hitBoundingBox = GameState.BoundingBoxes.Keys.First();
 
             // get all boundingboxes 
-            foreach (BoundingBox boundingBox in GameWorld.Instance.BoundingBoxes.Keys)
+            foreach (BoundingBox boundingBox in GameState.BoundingBoxes.Keys)
             {
                 // check for intersection between ray and boundingbox 
                 if (boundingBox.Intersects(ray) != null &&
-                Vector3.Distance(GameWorld.Instance.BoundingBoxes[boundingBox], ray.Position) < Vector3.Distance(GameWorld.Instance.BoundingBoxes[hitBoundingBox], ray.Position))
+                Vector3.Distance(GameState.BoundingBoxes[boundingBox], ray.Position) < Vector3.Distance(GameState.BoundingBoxes[hitBoundingBox], ray.Position))
                 {
                     hitBoundingBox = boundingBox;
                 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Portal.ComponentPattern;
+using Portal.MenuStates;
 using PortalGame.BuilderPattern;
 using PortalGame.CreationalPattern;
 using PortalGame.ObserverPattern;
@@ -70,12 +71,12 @@ namespace PortalGame.ComponentPattern.Portals
                 if (GameObject.Tag == PortalType.Red.ToString() && other.Tag == PortalType.Blue.ToString())
                 {
                     // remove blue portal 
-                    GameWorld.Instance.Destroy(other);
+                    GameState.Destroy(other);
                 }
                 if (GameObject.Tag == PortalType.Blue.ToString() && other.Tag == PortalType.Red.ToString())
                 {
                     // remove red portal 
-                    GameWorld.Instance.Destroy(other);
+                    GameState.Destroy(other);
                 }
             }
         }

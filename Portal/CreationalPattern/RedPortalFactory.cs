@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Portal.ComponentPattern;
 using Microsoft.Xna.Framework.Graphics;
 using SharpDX.Direct3D9;
+using Portal.MenuStates;
 
 namespace Portal.CreationalPattern
 {
@@ -159,11 +160,11 @@ namespace Portal.CreationalPattern
         {
             // remove old portal 
             // find the red portal object 
-            GameObject redPortalObject = GameWorld.Instance.GetObjectOfType<RedPortal>();
+            GameObject redPortalObject = GameState.GetObjectOfType<RedPortal>();
             // destroy red portal 
             if (redPortalObject != null)
             {
-                GameWorld.Instance.Destroy(redPortalObject);
+                GameState.Destroy(redPortalObject);
             }
 
             GameObject gameObject = new GameObject();
