@@ -56,8 +56,8 @@ namespace PortalGame
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            _graphics.PreferredBackBufferWidth = 900;
-            _graphics.PreferredBackBufferHeight = 600;
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
 
             ScreenSize = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         }
@@ -68,6 +68,7 @@ namespace PortalGame
             this.Window.Title = "Last Hope";
 
             // set initial states 
+            MenuState = new MenuState(Content, GraphicsDevice, this);
             GameState = new GameState(Content, GraphicsDevice, this);
 
             base.Initialize();
@@ -78,7 +79,7 @@ namespace PortalGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // handle states 
-            currentState = GameState;
+            currentState = MenuState;
             currentState.LoadContent();
             nextState = null; 
         }
@@ -92,6 +93,8 @@ namespace PortalGame
             if(nextState != null)
             {
                 currentState = nextState;
+                currentState.LoadContent();
+
                 nextState = null; 
             }
 
