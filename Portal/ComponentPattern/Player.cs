@@ -35,7 +35,11 @@ namespace PortalGame.ComponentPattern
         private Vector2 gravity;
 
         private Dictionary<Keys, KeyButtonState> movementKeys = new Dictionary<Keys, KeyButtonState>();
-        private Animator animator; 
+        private Animator animator;
+
+        // portal timer 
+        private float portalTimer = 0;
+        private float portalTime = 1; 
 
         private GameObject Wand { get; set; }
         #endregion
@@ -129,6 +133,9 @@ namespace PortalGame.ComponentPattern
             {
                 SetCollisionBox();
             }
+
+            // update portal timer 
+            portalTimer += GameState.DeltaTime; 
         }
 
         private void SetCollisionBox()
@@ -196,26 +203,34 @@ namespace PortalGame.ComponentPattern
                 BluePortal bluePortal = (BluePortal)GameState.FindObjectOfType<BluePortal>();
                 if (redPortal != null && bluePortal != null)
                 {
-                    // when colliding with portal 
-                    if (other.Tag == PortalType.Red.ToString())
+                    // check timer 
+                    if (portalTimer > portalTime)
                     {
-                        // get blue portals position 
-                        GameObject bluePortalObject = GameState.GetObjectOfType<BluePortal>();
+                        // when colliding with portal 
+                        if (other.Tag == PortalType.Red.ToString())
+                        {
+                            // get blue portals position 
+                            GameObject bluePortalObject = GameState.GetObjectOfType<BluePortal>();
 
-                        // set players position to blue portal, plus offset 
-                        GameObject.Transform.Position = bluePortalObject.Transform.Position + (bluePortal.PlayerDisplacement * spriteRenderer.Sprite.Width);
-                        
-                        SetCollisionBox();
-                    }
-                    if (other.Tag == PortalType.Blue.ToString())
-                    {
-                        // get red portals position 
-                        GameObject redPortalObject = GameState.GetObjectOfType<RedPortal>();
+                            // set players position to blue portal, plus offset 
+                            GameObject.Transform.Position = bluePortalObject.Transform.Position + (bluePortal.PlayerDisplacement * spriteRenderer.Sprite.Width);
 
-                        // set player position to red portal, plus offset 
-                        GameObject.Transform.Position = redPortalObject.Transform.Position + (redPortal.PlayerDisplacement * spriteRenderer.Sprite.Width);
-                        
-                        SetCollisionBox();
+                            SetCollisionBox();
+
+                            portalTimer = 0;
+                        }
+                        if (other.Tag == PortalType.Blue.ToString())
+                        {
+                            // get red portals position 
+                            GameObject redPortalObject = GameState.GetObjectOfType<RedPortal>();
+
+                            // set player position to red portal, plus offset 
+                            GameObject.Transform.Position = redPortalObject.Transform.Position + (redPortal.PlayerDisplacement * spriteRenderer.Sprite.Width);
+
+                            SetCollisionBox();
+
+                            portalTimer = 0;
+                        }
                     }
                 }
 
