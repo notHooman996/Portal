@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Content;
 using Portal.BuilderPattern;
 using PortalGame.BuilderPattern;
 using System.IO;
+using System.Diagnostics;
 
 namespace Portal.MenuStates
 {
@@ -40,7 +41,6 @@ namespace Portal.MenuStates
 
         public GameState(ContentManager content, GraphicsDevice graphicsDevice, GameWorld game) : base(content, graphicsDevice, game)
         {
-            game.IsMouseVisible = false; 
         }
 
         #region methods 
@@ -50,8 +50,8 @@ namespace Portal.MenuStates
             AddPlatforms(".\\..\\..\\..\\TileMapFiles\\TileMapTestLevel.txt");
 
             // add background 
-            Director bgDirector = new Director(new BackgroundBuilder());
-            gameObjects.Add(bgDirector.Construct());
+            //Director bgDirector = new Director(new BackgroundBuilder());
+            //gameObjects.Add(bgDirector.Construct());
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -67,6 +67,7 @@ namespace Portal.MenuStates
             userInterface.Initialize();
 
             Camera = new Camera(graphicsDevice.Viewport);
+            Debug.WriteLine("test camera: " + Camera);
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -98,7 +99,7 @@ namespace Portal.MenuStates
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            graphicsDevice.Clear(Color.Coral);
+            graphicsDevice.Clear(Color.DeepSkyBlue);
 
             spriteBatch.Begin(SpriteSortMode.FrontToBack,
                                BlendState.AlphaBlend,
@@ -251,6 +252,9 @@ namespace Portal.MenuStates
                     {
                         Director playerDirector = new Director(new PlayerBuilder(i, j, tilesize));
                         playerObject = playerDirector.Construct();
+
+                        Debug.WriteLine(playerObject);
+
                         gameObjects.Add(playerObject);
                     }
                     // e marks the end, or the goal, the spot the player needs to get to 
