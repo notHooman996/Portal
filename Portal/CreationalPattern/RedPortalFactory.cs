@@ -53,7 +53,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)topPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Pink\\Top\\pink1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             topPrototype.AddComponent(new RedPortal());
@@ -75,7 +75,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)bottomPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Pink\\Bottom\\pink1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             bottomPrototype.AddComponent(new RedPortal());
@@ -97,7 +97,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)leftPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Pink\\Left\\pink1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             leftPrototype.AddComponent(new RedPortal());
@@ -119,7 +119,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)rightPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Pink\\Right\\pink1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             rightPrototype.AddComponent(new RedPortal());

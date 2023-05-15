@@ -53,7 +53,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)topPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Green\\Top\\green1"); 
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             topPrototype.AddComponent(new BluePortal());
@@ -75,7 +75,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)bottomPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Green\\Bottom\\green1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             bottomPrototype.AddComponent(new BluePortal());
@@ -97,7 +97,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)leftPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Green\\Left\\green1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             leftPrototype.AddComponent(new BluePortal());
@@ -119,7 +119,7 @@ namespace Portal.CreationalPattern
 
             SpriteRenderer spriteRenderer = (SpriteRenderer)rightPrototype.AddComponent(new SpriteRenderer());
             spriteRenderer.SetSprite("Portal\\Green\\Right\\green1");
-            spriteRenderer.LayerDepth = 0.9f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             rightPrototype.AddComponent(new BluePortal());
