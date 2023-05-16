@@ -18,7 +18,6 @@ namespace Portal.MenuStates
         private SpriteFont textFont;
         private string text;
 
-        private Vector2 position;
         private float scale;
         private float layer;
         private Color color;
@@ -30,6 +29,11 @@ namespace Portal.MenuStates
         #endregion
 
         #region Properties 
+        /// <summary>
+        /// property for button position 
+        /// </summary>
+        public Vector2 Position { get; set; }
+
         /// <summary>
         /// Property to get the size of the button sprite texture 
         /// </summary>
@@ -52,8 +56,8 @@ namespace Portal.MenuStates
             get
             {
                 return new Rectangle(
-                    (int)(position.X - GetSpriteSize.X / 2),
-                    (int)(position.Y - GetSpriteSize.Y / 2),
+                    (int)(Position.X - GetSpriteSize.X / 2),
+                    (int)(Position.Y - GetSpriteSize.Y / 2),
                     (int)GetSpriteSize.X,
                     (int)GetSpriteSize.Y
                     );
@@ -70,7 +74,7 @@ namespace Portal.MenuStates
         /// <param name="color">Color overlay</param>
         public Button(Vector2 position, string text, Color color)
         {
-            this.position = position;
+            this.Position = position;
             this.text = text;
             this.color = color;
             layer = 0.96f;
@@ -171,7 +175,7 @@ namespace Portal.MenuStates
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(buttonTexture, position, null, color, 0f, GetOrigin, scale, SpriteEffects.None, layer);
+            spriteBatch.Draw(buttonTexture, Position, null, color, 0f, GetOrigin, scale, SpriteEffects.None, layer);
 
             if (!string.IsNullOrEmpty(text))
             {
