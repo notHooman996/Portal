@@ -18,7 +18,7 @@ namespace Portal.BuilderPattern
 
         public EndBuilder(int x, int y, int tileSize)
         {
-            position = new Vector2(x * tileSize, y * tileSize);
+            position = new Vector2(x * tileSize, y * tileSize - 10);
         }
 
         public void BuildGameObject()
@@ -30,9 +30,10 @@ namespace Portal.BuilderPattern
 
         private void BuildComponents()
         {
-            gameObject.AddComponent(new End(position));
             gameObject.AddComponent(new SpriteRenderer());
-            gameObject.AddComponent(new Collider()); 
+            End end = gameObject.AddComponent(new End(position)) as End;
+            Collider collider = gameObject.AddComponent(new Collider()) as Collider;
+            collider.CollisionEvent.Attach(end); 
         }
 
         public GameObject GetResult()

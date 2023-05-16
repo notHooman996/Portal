@@ -18,7 +18,6 @@ namespace Portal.MenuStates
         private SpriteFont textFont;
         private string text;
 
-        private Vector2 position;
         private float scale;
         private float layer;
         private Color color;
@@ -30,6 +29,11 @@ namespace Portal.MenuStates
         #endregion
 
         #region Properties 
+        /// <summary>
+        /// property for button position 
+        /// </summary>
+        public Vector2 Position { get; set; }
+
         /// <summary>
         /// Property to get the size of the button sprite texture 
         /// </summary>
@@ -52,8 +56,8 @@ namespace Portal.MenuStates
             get
             {
                 return new Rectangle(
-                    (int)(position.X - GetSpriteSize.X / 2),
-                    (int)(position.Y - GetSpriteSize.Y / 2),
+                    (int)(Position.X - GetSpriteSize.X / 2),
+                    (int)(Position.Y - GetSpriteSize.Y / 2),
                     (int)GetSpriteSize.X,
                     (int)GetSpriteSize.Y
                     );
@@ -70,7 +74,7 @@ namespace Portal.MenuStates
         /// <param name="color">Color overlay</param>
         public Button(Vector2 position, string text, Color color)
         {
-            this.position = position;
+            this.Position = position;
             this.text = text;
             this.color = color;
             layer = 0.96f;
@@ -92,6 +96,41 @@ namespace Portal.MenuStates
             _currentMouse = Mouse.GetState();
             // set rectangle for mouse position 
             Rectangle mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
+
+            // when mouse hovers over button 
+            if (mouseRectangle.Intersects(GetRectangle))
+            {
+                ColorShift();
+
+                // when button gets clicked 
+                if (_currentMouse.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed)
+                {
+                    isClicked = true;
+                    color.A = 255;
+                }
+            }
+            else if (color.A < 255)
+            {
+                color.A += 3;
+            }
+        }
+
+        public void UpdatePause(GameTime gameTime)
+        {
+            // update mouse states 
+            _previousMouse = _currentMouse;
+            _currentMouse = Mouse.GetState();
+
+            // make sure the mouse is relative to the camera 
+            // get the mouse position 
+            Vector2 mousePoint = new Vector2(_currentMouse.X, _currentMouse.Y);
+            // invert the camera transform matrix 
+            Matrix invertedMatrix = Matrix.Invert(GameState.Camera.Transform);
+            // transform the mouse point with the inverted matrix 
+            Vector2 transform = Vector2.Transform(mousePoint, invertedMatrix);
+
+            // set rectangle for mouse position 
+            Rectangle mouseRectangle = new Rectangle((int)transform.X, (int)transform.Y, 1, 1);
 
             // when mouse hovers over button 
             if (mouseRectangle.Intersects(GetRectangle))
@@ -136,7 +175,7 @@ namespace Portal.MenuStates
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(buttonTexture, position, null, color, 0f, GetOrigin, scale, SpriteEffects.None, layer);
+            spriteBatch.Draw(buttonTexture, Position, null, color, 0f, GetOrigin, scale, SpriteEffects.None, layer);
 
             if (!string.IsNullOrEmpty(text))
             {

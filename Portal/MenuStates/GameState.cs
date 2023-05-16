@@ -13,12 +13,19 @@ using Portal.BuilderPattern;
 using PortalGame.BuilderPattern;
 using System.IO;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Input;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Portal.ComponentPattern;
 
 namespace Portal.MenuStates
 {
     public class GameState : State
     {
         #region fields 
+        private bool paused;
+        private Button resumeButton;
+        private Button menuButton; 
+
         private static List<GameObject> gameObjects = new List<GameObject>();
         private static List<GameObject> destroyGameObjects = new List<GameObject>();
         private static List<GameObject> newGameObjects = new List<GameObject>();
@@ -26,9 +33,11 @@ namespace Portal.MenuStates
         private UI userInterface = UI.Instance;
 
         // level map fields 
-        private GameObject playerObject;
+        private static GameObject playerObject;
         public static Camera Camera { get; private set; }
         public static Vector2 LevelSize { get; private set; }
+
+        public static bool EndReached { get; set; }
         #endregion
 
         #region properties
@@ -41,6 +50,17 @@ namespace Portal.MenuStates
 
         public GameState(ContentManager content, GraphicsDevice graphicsDevice, GameWorld game) : base(content, graphicsDevice, game)
         {
+            // reset all lists 
+            gameObjects = new List<GameObject>();
+            destroyGameObjects = new List<GameObject>();
+            newGameObjects = new List<GameObject>();
+            Colliders = new List<Collider>();
+            BoundingBoxes = new Dictionary<BoundingBox, Vector3>();
+
+            // set pause menu buttons 
+            Vector2 buttonPosition = new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2);
+            resumeButton = new Button(buttonPosition, "Resume", Color.White);
+            menuButton = new Button(buttonPosition + new Vector2(0, 100), "Menu", Color.White);
         }
 
         #region methods 
@@ -67,7 +87,6 @@ namespace Portal.MenuStates
             userInterface.Initialize();
 
             Camera = new Camera(graphicsDevice.Viewport);
-            Debug.WriteLine("test camera: " + Camera);
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -75,26 +94,75 @@ namespace Portal.MenuStates
             }
 
             userInterface.LoadContent(content);
+
+            // load pause menu buttons 
+            resumeButton.LoadContent(content);
+            menuButton.LoadContent(content);
         }
 
         public override void Update(GameTime gameTime)
         {
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            //    Exit();
-
-            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            userInterface.Update(gameTime);
-
-            foreach (GameObject gameObject in gameObjects)
+            if (!paused && !EndReached)
             {
-                gameObject.Update(gameTime);
+                DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                // update camera 
-                Camera.Update(playerObject.Transform.Position);
+                userInterface.Update(gameTime);
+
+                foreach (GameObject gameObject in gameObjects)
+                {
+                    gameObject.Update(gameTime);
+
+                    // update camera 
+                    Camera.Update(playerObject.Transform.Position);
+                }
+
+                Cleanup();
+
+                // press P for pause 
+                if (Keyboard.GetState().IsKeyDown(Keys.P))
+                {
+                    paused = true;
+                    // set button positions 
+                    Vector2 position = Vector2.Transform(new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2), Matrix.Invert(Camera.Transform));
+                    resumeButton.Position = position; 
+                    menuButton.Position = position + new Vector2(0, 100); 
+                }
             }
+            else if (paused)
+            {
+                resumeButton.UpdatePause(gameTime);
+                menuButton.UpdatePause(gameTime);
 
-            Cleanup();
+                // handle buttons when pressed 
+                if (resumeButton.isClicked)
+                {
+                    resumeButton.isClicked = false; 
+                    // unpause 
+                    paused = false; 
+                }
+                if (menuButton.isClicked)
+                {
+                    menuButton.isClicked = false;
+
+                    // return to menu
+                    game.ChangeState(GameWorld.Instance.MenuState);
+                }
+            }
+            
+            if (EndReached)
+            {
+                menuButton.Position = Vector2.Transform(new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2), Matrix.Invert(Camera.Transform));
+                
+                menuButton.UpdatePause(gameTime);
+
+                if (menuButton.isClicked)
+                {
+                    menuButton.isClicked = false;
+
+                    // return to menu
+                    game.ChangeState(GameWorld.Instance.MenuState);
+                }
+            }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -107,12 +175,25 @@ namespace Portal.MenuStates
                                null, null, null,
                                Camera.Transform);
 
-            foreach (GameObject gameObject in gameObjects)
+            if (!paused)
             {
-                gameObject.Draw(spriteBatch);
-            }
+                foreach (GameObject gameObject in gameObjects)
+                {
+                    gameObject.Draw(spriteBatch);
+                }
 
-            userInterface.Draw(spriteBatch);
+                userInterface.Draw(spriteBatch);
+            }
+            else if (paused)
+            {
+                resumeButton.Draw(gameTime, spriteBatch);
+                menuButton.Draw(gameTime, spriteBatch);
+            }
+            
+            if (EndReached)
+            {
+                menuButton.Draw(gameTime, spriteBatch);
+            }
 
             spriteBatch.End();
         }
@@ -252,9 +333,6 @@ namespace Portal.MenuStates
                     {
                         Director playerDirector = new Director(new PlayerBuilder(i, j, tilesize));
                         playerObject = playerDirector.Construct();
-
-                        Debug.WriteLine(playerObject);
-
                         gameObjects.Add(playerObject);
                     }
                     // e marks the end, or the goal, the spot the player needs to get to 

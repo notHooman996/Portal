@@ -30,7 +30,7 @@ namespace Portal.ComponentPattern
             // save the players position 
             this.playerPosition = playerPosition; 
 
-            int displacement = 10;
+            int displacement = 20;
 
             aimDirection = new Vector2(direction.X - playerPosition.X, direction.Y - playerPosition.Y);
 
