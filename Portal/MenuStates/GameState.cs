@@ -57,6 +57,8 @@ namespace Portal.MenuStates
             Colliders = new List<Collider>();
             BoundingBoxes = new Dictionary<BoundingBox, Vector3>();
 
+            EndReached = false; 
+
             // set pause menu buttons 
             Vector2 buttonPosition = new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2);
             resumeButton = new Button(buttonPosition, "Resume", Color.White);
@@ -67,7 +69,7 @@ namespace Portal.MenuStates
         public override void LoadContent()
         {
             //set up the level
-            AddPlatforms(".\\..\\..\\..\\TileMapFiles\\TileMapTestLevel.txt");
+            AddPlatforms(".\\..\\..\\..\\TileMapFiles\\Level1.txt");
 
             // add background 
             //Director bgDirector = new Director(new BackgroundBuilder());
