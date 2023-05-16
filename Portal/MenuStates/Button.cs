@@ -111,6 +111,41 @@ namespace Portal.MenuStates
             }
         }
 
+        public void UpdatePause(GameTime gameTime)
+        {
+            // update mouse states 
+            _previousMouse = _currentMouse;
+            _currentMouse = Mouse.GetState();
+
+            // make sure the mouse is relative to the camera 
+            // get the mouse position 
+            Vector2 mousePoint = new Vector2(_currentMouse.X, _currentMouse.Y);
+            // invert the camera transform matrix 
+            Matrix invertedMatrix = Matrix.Invert(GameState.Camera.Transform);
+            // transform the mouse point with the inverted matrix 
+            Vector2 transform = Vector2.Transform(mousePoint, invertedMatrix);
+
+            // set rectangle for mouse position 
+            Rectangle mouseRectangle = new Rectangle((int)transform.X, (int)transform.Y, 1, 1);
+
+            // when mouse hovers over button 
+            if (mouseRectangle.Intersects(GetRectangle))
+            {
+                ColorShift();
+
+                // when button gets clicked 
+                if (_currentMouse.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed)
+                {
+                    isClicked = true;
+                    color.A = 255;
+                }
+            }
+            else if (color.A < 255)
+            {
+                color.A += 3;
+            }
+        }
+
         /// <summary>
         /// Makes the button shift its color opacity 
         /// </summary>
