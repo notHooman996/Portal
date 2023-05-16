@@ -57,7 +57,16 @@ namespace Portal.ComponentPattern
                     player.RemoveWand(); 
                     GameState.Destroy(other);
 
-                    GameState.EndReached = true;
+                    if(GameState.LevelNumber >= GameState.Levels.Length-1)
+                    {
+                        GameState.EndReached = true;
+                    }
+                    else
+                    {
+                        GameState.LevelNumber++;
+                        GameState.LoadLevel(); 
+                    }
+                    
                 }
             }
         }
