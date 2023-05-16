@@ -56,6 +56,8 @@ namespace PortalGame
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
+            _graphics.IsFullScreen = true;
+
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
 
