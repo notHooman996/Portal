@@ -56,10 +56,14 @@ namespace Portal.ComponentPattern
             Ray ray = new Ray(originPoint, shootDirection);
 
             // find the hit boundingbox 
-            BoundingBox hitBoundingBox = FindHitBoundingBox(ray); 
+            BoundingBox hitBoundingBox = FindHitBoundingBox(ray);
+
+            Debug.WriteLine("boundingbox found: " + hitBoundingBox);
 
             // check hit boundingbox again 
             float? distance = ray.Intersects(hitBoundingBox);
+
+            Debug.WriteLine("check distance: " + distance);
 
             // get the boundingbox that the ray hits 
             if (distance.HasValue)
