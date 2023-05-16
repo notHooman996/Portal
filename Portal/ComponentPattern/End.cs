@@ -27,7 +27,7 @@ namespace Portal.ComponentPattern
         {
             spriteRenderer = GameObject.GetComponent<SpriteRenderer>() as SpriteRenderer;
             spriteRenderer.SetSprite("Door\\DoorOpen");
-            spriteRenderer.LayerDepth = 0.5f;
+            spriteRenderer.LayerDepth = 0.7f;
             spriteRenderer.Scale = 1f;
 
             GameObject.Transform.Position = position;
@@ -63,8 +63,7 @@ namespace Portal.ComponentPattern
                     }
                     else
                     {
-                        GameState.LevelNumber++;
-                        GameState.LoadLevel(); 
+                        GameState.NextLevel(); 
                     }
                     
                 }

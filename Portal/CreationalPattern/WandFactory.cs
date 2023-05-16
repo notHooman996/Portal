@@ -37,7 +37,7 @@ namespace Portal.CreationalPattern
             wandPrototype = new GameObject();
             SpriteRenderer spriteRenderer = wandPrototype.AddComponent(new SpriteRenderer()) as SpriteRenderer;
             spriteRenderer.SetSprite("Wand\\wand");
-            spriteRenderer.LayerDepth = 0.5f;
+            spriteRenderer.LayerDepth = 0.8f;
             spriteRenderer.Scale = 1f;
 
             wandPrototype.AddComponent(new Wand()); 
