@@ -26,15 +26,13 @@ namespace PortalGame.ComponentPattern
         private float speed;
         private Vector2 startPosition;
 
-        private bool canShoot;
-
         private float jumpTime;
         private bool isJumping;
         private bool canJump; 
 
         private Vector2 gravity;
 
-        private Dictionary<Keys, KeyButtonState> movementKeys = new Dictionary<Keys, KeyButtonState>();
+        private static Dictionary<Keys, KeyButtonState> movementKeys = new Dictionary<Keys, KeyButtonState>();
         private Animator animator;
 
         // portal timer 
@@ -72,8 +70,10 @@ namespace PortalGame.ComponentPattern
             collider = GameObject.GetComponent<Collider>() as Collider;
 
             // set collisionbox 
-            SetCollisionBox(); 
+            SetCollisionBox();
 
+            // set movement keys 
+            movementKeys = new Dictionary<Keys, KeyButtonState>();
             movementKeys.Add(Keys.A, KeyButtonState.UP);
             movementKeys.Add(Keys.D, KeyButtonState.UP);
             movementKeys.Add(Keys.W, KeyButtonState.UP);
@@ -87,6 +87,11 @@ namespace PortalGame.ComponentPattern
             Wand = WandFactory.Instance.Create(PortalType.Blue);
 
             GameState.Instantiate(Wand);
+        }
+
+        public void RemoveWand()
+        {
+            GameState.Destroy(Wand); 
         }
 
         /// <summary>
@@ -304,8 +309,6 @@ namespace PortalGame.ComponentPattern
                     SetCollisionBox();
                 }
             }
-            
-
 
             if (gameEvent is ButtonEvent)
             {
