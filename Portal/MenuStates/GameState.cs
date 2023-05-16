@@ -13,12 +13,17 @@ using Portal.BuilderPattern;
 using PortalGame.BuilderPattern;
 using System.IO;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Portal.MenuStates
 {
     public class GameState : State
     {
         #region fields 
+        private bool paused;
+        private Button resumeButton;
+        private Button menuButton; 
+
         private static List<GameObject> gameObjects = new List<GameObject>();
         private static List<GameObject> destroyGameObjects = new List<GameObject>();
         private static List<GameObject> newGameObjects = new List<GameObject>();
@@ -41,6 +46,10 @@ namespace Portal.MenuStates
 
         public GameState(ContentManager content, GraphicsDevice graphicsDevice, GameWorld game) : base(content, graphicsDevice, game)
         {
+            // set pause menu buttons 
+            Vector2 buttonPosition = new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2);
+            resumeButton = new Button(buttonPosition, "Resume", Color.White);
+            menuButton = new Button(buttonPosition + new Vector2(0, 100), "Menu", Color.White);
         }
 
         #region methods 
@@ -75,26 +84,55 @@ namespace Portal.MenuStates
             }
 
             userInterface.LoadContent(content);
+
+            // load pause menu buttons 
+            resumeButton.LoadContent(content);
+            menuButton.LoadContent(content);
         }
 
         public override void Update(GameTime gameTime)
         {
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            //    Exit();
-
-            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            userInterface.Update(gameTime);
-
-            foreach (GameObject gameObject in gameObjects)
+            if (!paused)
             {
-                gameObject.Update(gameTime);
+                DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                // update camera 
-                Camera.Update(playerObject.Transform.Position);
+                userInterface.Update(gameTime);
+
+                foreach (GameObject gameObject in gameObjects)
+                {
+                    gameObject.Update(gameTime);
+
+                    // update camera 
+                    Camera.Update(playerObject.Transform.Position);
+                }
+
+                Cleanup();
+
+                // press P for pause 
+                if (Keyboard.GetState().IsKeyDown(Keys.P))
+                {
+                    paused = true; 
+                }
             }
+            else if (paused)
+            {
+                resumeButton.UpdatePause(gameTime);
+                menuButton.UpdatePause(gameTime);
 
-            Cleanup();
+                // handle buttons when pressed 
+                if (resumeButton.isClicked)
+                {
+                    resumeButton.isClicked = false; 
+                    // unpause 
+                    paused = false; 
+                }
+                if (menuButton.isClicked)
+                {
+                    menuButton.isClicked = false;
+                    // return to menu
+                    game.ChangeState(GameWorld.Instance.MenuState);
+                }
+            }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -107,12 +145,20 @@ namespace Portal.MenuStates
                                null, null, null,
                                Camera.Transform);
 
-            foreach (GameObject gameObject in gameObjects)
+            if (!paused)
             {
-                gameObject.Draw(spriteBatch);
-            }
+                foreach (GameObject gameObject in gameObjects)
+                {
+                    gameObject.Draw(spriteBatch);
+                }
 
-            userInterface.Draw(spriteBatch);
+                userInterface.Draw(spriteBatch);
+            }
+            else if (paused)
+            {
+                resumeButton.Draw(gameTime, spriteBatch);
+                menuButton.Draw(gameTime, spriteBatch);
+            }
 
             spriteBatch.End();
         }
