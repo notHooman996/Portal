@@ -21,7 +21,7 @@ namespace Portal.MenuStates
 {
     public class GameState : State
     {
-        #region fields 
+        #region fields and properties 
         private bool paused;
         private Button resumeButton;
         private Button menuButton; 
@@ -37,10 +37,12 @@ namespace Portal.MenuStates
         public static Camera Camera { get; private set; }
         public static Vector2 LevelSize { get; private set; }
 
-        public static bool EndReached { get; set; }
-        #endregion
+        public static string[] Levels;
 
-        #region properties
+        public static int LevelNumber;
+
+        public static bool EndReached { get; set; }
+
         public static float DeltaTime { get; private set; }
 
         public static List<Collider> Colliders { get; private set; } = new List<Collider>();
@@ -57,7 +59,9 @@ namespace Portal.MenuStates
             Colliders = new List<Collider>();
             BoundingBoxes = new Dictionary<BoundingBox, Vector3>();
 
-            EndReached = false; 
+            EndReached = false;
+            Levels = new string[] { ".\\..\\..\\..\\TileMapFiles\\Level1.txt", ".\\..\\..\\..\\TileMapFiles\\TileMapTestLevel.txt" };
+            LevelNumber = 0; 
 
             // set pause menu buttons 
             Vector2 buttonPosition = new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2);
@@ -68,12 +72,26 @@ namespace Portal.MenuStates
         #region methods 
         public override void LoadContent()
         {
-            //set up the level
-            AddPlatforms(".\\..\\..\\..\\TileMapFiles\\Level1.txt");
+            LoadLevel();
 
-            // add background 
-            //Director bgDirector = new Director(new BackgroundBuilder());
-            //gameObjects.Add(bgDirector.Construct());
+            Camera = new Camera(graphicsDevice.Viewport);
+
+            // load pause menu buttons 
+            resumeButton.LoadContent(content);
+            menuButton.LoadContent(content);
+        }
+
+        public static void LoadLevel()
+        {
+            // reset all lists 
+            gameObjects = new List<GameObject>();
+            destroyGameObjects = new List<GameObject>();
+            newGameObjects = new List<GameObject>();
+            Colliders = new List<Collider>();
+            BoundingBoxes = new Dictionary<BoundingBox, Vector3>();
+
+            //set up the level
+            AddPlatforms(Levels[LevelNumber]);
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -86,20 +104,10 @@ namespace Portal.MenuStates
                 }
             }
 
-            userInterface.Initialize();
-
-            Camera = new Camera(graphicsDevice.Viewport);
-
             foreach (GameObject gameObject in gameObjects)
             {
                 gameObject.Start();
             }
-
-            userInterface.LoadContent(content);
-
-            // load pause menu buttons 
-            resumeButton.LoadContent(content);
-            menuButton.LoadContent(content);
         }
 
         public override void Update(GameTime gameTime)
@@ -294,7 +302,7 @@ namespace Portal.MenuStates
             return null;
         }
 
-        private void AddPlatforms(string filepath)
+        private static void AddPlatforms(string filepath)
         {
             // number of tiles in x and y depends on the size of the file 
             string firstLine = File.ReadLines(filepath).First();
