@@ -25,6 +25,7 @@ namespace Portal.MenuStates
         private bool paused;
         private Button resumeButton;
         private Button menuButton; 
+        private Button nextButton; 
 
         private static List<GameObject> gameObjects = new List<GameObject>();
         private static List<GameObject> destroyGameObjects = new List<GameObject>();
@@ -37,9 +38,11 @@ namespace Portal.MenuStates
         public static Camera Camera { get; private set; }
         public static Vector2 LevelSize { get; private set; }
 
-        public static string[] Levels;
+        public static string[] Levels { get; private set; }
 
-        public static int LevelNumber;
+        public static int LevelNumber { get; private set; }
+
+        public static bool IsNextLevelReady { get; private set; }
 
         public static bool EndReached { get; set; }
 
@@ -59,14 +62,19 @@ namespace Portal.MenuStates
             Colliders = new List<Collider>();
             BoundingBoxes = new Dictionary<BoundingBox, Vector3>();
 
+            // set level basis 
             EndReached = false;
-            Levels = new string[] { ".\\..\\..\\..\\TileMapFiles\\Level1.txt", ".\\..\\..\\..\\TileMapFiles\\TileMapTestLevel.txt" };
-            LevelNumber = 0; 
+            IsNextLevelReady = false;
+            LevelNumber = 0;
+            Levels = new string[] { ".\\..\\..\\..\\TileMapFiles\\Level1.txt", 
+                                    ".\\..\\..\\..\\TileMapFiles\\Level2.txt", 
+                                    ".\\..\\..\\..\\TileMapFiles\\Level3.txt"};
 
-            // set pause menu buttons 
+            // set menu buttons 
             Vector2 buttonPosition = new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2);
             resumeButton = new Button(buttonPosition, "Resume", Color.White);
             menuButton = new Button(buttonPosition + new Vector2(0, 100), "Menu", Color.White);
+            nextButton = new Button(buttonPosition, "Next", Color.White);
         }
 
         #region methods 
@@ -79,6 +87,7 @@ namespace Portal.MenuStates
             // load pause menu buttons 
             resumeButton.LoadContent(content);
             menuButton.LoadContent(content);
+            nextButton.LoadContent(content);
         }
 
         public static void LoadLevel()
@@ -158,6 +167,21 @@ namespace Portal.MenuStates
                     game.ChangeState(GameWorld.Instance.MenuState);
                 }
             }
+
+            if (IsNextLevelReady)
+            {
+                nextButton.Position = Vector2.Transform(new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2), Matrix.Invert(Camera.Transform));
+
+                nextButton.UpdatePause(gameTime);
+
+                if (nextButton.isClicked)
+                {
+                    nextButton.isClicked = false;
+                    IsNextLevelReady = false; 
+
+                    LoadLevel(); 
+                }
+            }
             
             if (EndReached)
             {
@@ -173,6 +197,13 @@ namespace Portal.MenuStates
                     game.ChangeState(GameWorld.Instance.MenuState);
                 }
             }
+        }
+
+        public static void NextLevel()
+        {
+            LevelNumber++;
+
+            IsNextLevelReady = true; 
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -198,6 +229,11 @@ namespace Portal.MenuStates
             {
                 resumeButton.Draw(gameTime, spriteBatch);
                 menuButton.Draw(gameTime, spriteBatch);
+            }
+
+            if (IsNextLevelReady)
+            {
+                nextButton.Draw(gameTime, spriteBatch);
             }
             
             if (EndReached)
