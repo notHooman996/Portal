@@ -14,6 +14,8 @@ using PortalGame.BuilderPattern;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Input;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Portal.ComponentPattern;
 
 namespace Portal.MenuStates
 {
@@ -31,9 +33,11 @@ namespace Portal.MenuStates
         private UI userInterface = UI.Instance;
 
         // level map fields 
-        private GameObject playerObject;
+        private static GameObject playerObject;
         public static Camera Camera { get; private set; }
         public static Vector2 LevelSize { get; private set; }
+
+        public static bool EndReached { get; set; }
         #endregion
 
         #region properties
@@ -46,6 +50,13 @@ namespace Portal.MenuStates
 
         public GameState(ContentManager content, GraphicsDevice graphicsDevice, GameWorld game) : base(content, graphicsDevice, game)
         {
+            // reset all lists 
+            gameObjects = new List<GameObject>();
+            destroyGameObjects = new List<GameObject>();
+            newGameObjects = new List<GameObject>();
+            Colliders = new List<Collider>();
+            BoundingBoxes = new Dictionary<BoundingBox, Vector3>();
+
             // set pause menu buttons 
             Vector2 buttonPosition = new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2);
             resumeButton = new Button(buttonPosition, "Resume", Color.White);
@@ -76,7 +87,6 @@ namespace Portal.MenuStates
             userInterface.Initialize();
 
             Camera = new Camera(graphicsDevice.Viewport);
-            Debug.WriteLine("test camera: " + Camera);
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -92,7 +102,7 @@ namespace Portal.MenuStates
 
         public override void Update(GameTime gameTime)
         {
-            if (!paused)
+            if (!paused && !EndReached)
             {
                 DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -111,7 +121,11 @@ namespace Portal.MenuStates
                 // press P for pause 
                 if (Keyboard.GetState().IsKeyDown(Keys.P))
                 {
-                    paused = true; 
+                    paused = true;
+                    // set button positions 
+                    Vector2 position = Vector2.Transform(new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2), Matrix.Invert(Camera.Transform));
+                    resumeButton.Position = position; 
+                    menuButton.Position = position + new Vector2(0, 100); 
                 }
             }
             else if (paused)
@@ -129,6 +143,22 @@ namespace Portal.MenuStates
                 if (menuButton.isClicked)
                 {
                     menuButton.isClicked = false;
+
+                    // return to menu
+                    game.ChangeState(GameWorld.Instance.MenuState);
+                }
+            }
+            
+            if (EndReached)
+            {
+                menuButton.Position = Vector2.Transform(new Vector2(GameWorld.ScreenSize.X / 2, GameWorld.ScreenSize.Y / 2), Matrix.Invert(Camera.Transform));
+                
+                menuButton.UpdatePause(gameTime);
+
+                if (menuButton.isClicked)
+                {
+                    menuButton.isClicked = false;
+
                     // return to menu
                     game.ChangeState(GameWorld.Instance.MenuState);
                 }
@@ -157,6 +187,11 @@ namespace Portal.MenuStates
             else if (paused)
             {
                 resumeButton.Draw(gameTime, spriteBatch);
+                menuButton.Draw(gameTime, spriteBatch);
+            }
+            
+            if (EndReached)
+            {
                 menuButton.Draw(gameTime, spriteBatch);
             }
 
@@ -298,9 +333,6 @@ namespace Portal.MenuStates
                     {
                         Director playerDirector = new Director(new PlayerBuilder(i, j, tilesize));
                         playerObject = playerDirector.Construct();
-
-                        Debug.WriteLine(playerObject);
-
                         gameObjects.Add(playerObject);
                     }
                     // e marks the end, or the goal, the spot the player needs to get to 
