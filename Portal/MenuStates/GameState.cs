@@ -138,7 +138,7 @@ namespace Portal.MenuStates
                 Cleanup();
 
                 // press P for pause 
-                if (Keyboard.GetState().IsKeyDown(Keys.P))
+                if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 {
                     paused = true;
                     // set button positions 
